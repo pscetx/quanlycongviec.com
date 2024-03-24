@@ -1,0 +1,15 @@
+npm i @heroicons/react
+npm i @tailwindcss/forms
+npm i @types/node
+npm i @vercel/postgres
+npm i autoprefixer
+npm i bcrypt
+npm i bcryptjs
+npm i clsx
+npm i dotenv
+npm i next-auth@beta
+npm i postcss
+npm i tailwindcss
+npm i typescript
+npm i use-debounce
+npm i zod
