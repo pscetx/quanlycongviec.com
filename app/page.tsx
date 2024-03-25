@@ -8,7 +8,7 @@ export default function Home() {
       <div className="flex min-h-full flex-1 flex-col justify-center items-center px-6 py-12 lg:px-8">
         <Image
           src="/quanlycongviec.com.svg"
-          alt="quanlycongviec.com Logo"
+          alt="logo"
           width={400}
           height={50}
           priority
@@ -20,7 +20,7 @@ export default function Home() {
       <Image
         className="absolute bottom-0 left-0 w-full z-10"
         src="/graphic.svg"
-        alt="quanlycongviec.com Logo"
+        alt="graphic"
         width={400}
         height={50}
         priority

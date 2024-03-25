@@ -1,12 +1,19 @@
 import Link from "next/link";
 import NavLinks from "@/app/ui/dashboard/nav-links";
 import { BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
+import logo from "@/public/quanlycongviec.com-white.svg";
 
 export default function SideNav() {
   return (
     <div className="flex h-full flex-col px-1 py-1 md:px-1">
-      <div className="mb-1 flex h-20 bg-neutral-800 items-start justify-end rounded-md p-4 md:h-40">
-        <BellIcon className="w-8" />
+      <div className="mb-1 flex h-20 bg-neutral-800 rounded-md p-4 md:h-40">
+        <div className="flex-grow items-center">
+          <Image src={logo} alt="logo" width={400} height={50} priority />
+        </div>
+        {/* <div className="flex items-end justify-end">
+          <BellIcon className="w-7" />
+        </div> */}
       </div>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-1">
         <NavLinks />
