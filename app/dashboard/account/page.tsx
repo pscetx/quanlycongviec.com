@@ -1,6 +1,7 @@
 import { lusitana } from "@/app/ui/fonts";
 import { PowerIcon } from "@heroicons/react/24/outline";
 import { signOut } from "@/auth";
+import AccountInfo from "@/app/ui/account/info";
 
 export default async function Page() {
   return (
@@ -8,6 +9,7 @@ export default async function Page() {
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
         Tài khoản
       </h1>
+      {/* <AccountInfo /> */}
       <form
         action={async () => {
           "use server";
