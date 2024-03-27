@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 export default async function Home() {
   const session = await getServerSession();
   if (session) {
-    redirect("/");
+    redirect("/dashboard");
   }
   return (
     <main className="bg-neutral-100 min-h-screen flex-col items-center justify-between">
