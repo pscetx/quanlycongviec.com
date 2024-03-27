@@ -3,9 +3,7 @@ import { sql } from "@vercel/postgres";
 
 type User =
   | {
-      name?: string | null | undefined;
       email?: string | null | undefined;
-      image?: string | null | undefined;
     }
   | undefined;
 
@@ -14,34 +12,29 @@ type Props = {
   pagetype: string;
 };
 
-export default function Card({ user, pagetype }: Props) {
-  const greeting = user?.name ? (
-    <div className="flex flex-col items-center p-6 bg-white rounded-lg font-bold text-5xl text-black">
-      Hello {user?.name}!
-    </div>
-  ) : null;
+export default async function Card({ user, pagetype }: Props) {
+  const response = await sql`
+    SELECT name, profile_url FROM account WHERE email=${user?.email}`;
+  const name = response.rows[0]?.name;
+  const url = response.rows[0]?.profile_url;
 
-  const emailDisplay = user?.email ? (
-    <div className="">{user?.email}</div>
-  ) : null;
+  const nameDisplay = name ? <div>{name}</div> : null;
 
-  const userImage = user?.image ? (
+  const userImage = url ? (
     <Image
-      className="border-4 border-black dark:border-slate-500 drop-shadow-xl shadow-black rounded-full mx-auto mt-8"
-      src={user?.image}
+      className="rounded-full w-6"
+      src={url}
       width={200}
       height={200}
-      alt={user?.name ?? "Profile Pic"}
+      alt={name ?? "Profile Pic"}
       priority={true}
     />
   ) : null;
 
   return (
-    <section className="flex flex-col gap-4">
-      {greeting}
-      {emailDisplay}
+    <section className="flex flex-row gap-4">
       {userImage}
-      {/* <p className="text-2xl text-center">{pagetype} Page!</p> */}
+      {nameDisplay}
     </section>
   );
 }
