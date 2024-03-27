@@ -2,6 +2,18 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { compare } from 'bcrypt';
 import { sql } from '@vercel/postgres';
+import type { Account } from '@/app/lib/definitions';
+import { z } from 'zod';
+
+async function getUser(email: string): Promise<Account | undefined> {
+  try {
+    const user = await sql<Account>`SELECT * FROM account WHERE email=${email}`;
+    return user.rows[0];
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+    throw new Error('Failed to fetch user.');
+  }
+}
 
 const handler = NextAuth({
   session: {
@@ -17,25 +29,25 @@ const handler = NextAuth({
         password: {},
       },
       async authorize(credentials, req) {
-        //
-        const response = await sql`
-        SELECT * FROM account WHERE email=${credentials?.email}`;
-        const user = response.rows[0];
 
-        const passwordCorrect = await compare(
-          credentials?.password || '',
-          user.password
-        );
-
-        console.log({ passwordCorrect });
-
-        if (passwordCorrect) {
+        const parsedCredentials = z
+            .object({email: z.string().email(), password: z.string().min(6),})
+          .safeParse(credentials);
+        
+        if (parsedCredentials.success) {
+            const { email, password } = parsedCredentials.data;
+            const user = await getUser(email);
+            if (!user) return null;
+            const passwordsMatch = await compare(password, user.password);
+            if (passwordsMatch) {
           return {
-            id: user.id,
+            id: user.user_id,
             email: user.email,
           };
         }
-
+        }
+ 
+        console.log('Invalid credentials');
         return null;
       },
     }),

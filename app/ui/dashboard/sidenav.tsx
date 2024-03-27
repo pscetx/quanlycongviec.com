@@ -3,8 +3,11 @@ import NavLinks from "@/app/ui/dashboard/nav-links";
 import { BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import logo from "@/public/quanlycongviec.com-white.svg";
+import { getServerSession } from "next-auth";
+import UserCard from "./user-card";
 
-export default function SideNav() {
+export default async function SideNav() {
+  const session = await getServerSession();
   return (
     <div className="flex h-full flex-col px-1 py-1 md:px-1">
       <div className="mb-1 flex h-20 bg-neutral-800 rounded-md p-4 md:h-40">
@@ -23,7 +26,9 @@ export default function SideNav() {
           href="/dashboard/account"
         >
           <UserCircleIcon className="w-6" />
-          <button>/placeholder</button>
+          <section className="flex flex-col gap-6">
+            <UserCard user={session?.user} pagetype={"Server"} />
+          </section>
         </Link>
       </div>
     </div>
