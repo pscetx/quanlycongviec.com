@@ -17,8 +17,8 @@ export type Project = {
     project_id: string;
     name: string;
     creator_id: string;
-    start: string;
-    end: string;
+    start_date: string;
+    end_date: string;
     category: string;
     description: string;
 };
