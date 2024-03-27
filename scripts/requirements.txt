@@ -4,10 +4,11 @@ npm i @types/node
 npm i @vercel/postgres
 npm i autoprefixer
 npm i bcrypt
+npm i --save-dev @types/bcrypt
 npm i bcryptjs
 npm i clsx
 npm i dotenv
-npm i next-auth@beta
+npm i next-auth
 npm i postcss
 npm i tailwindcss
 npm i typescript

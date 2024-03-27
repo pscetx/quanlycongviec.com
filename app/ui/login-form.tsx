@@ -7,15 +7,38 @@ import {
 } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { Button } from "./button";
-import { useFormState, useFormStatus } from "react-dom";
-import { authenticate } from "@/app/lib/actions";
+import { useState } from "react";
 import { lusitana } from "@/app/ui/fonts";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { FormEvent } from "react";
 
 export default function LoginForm() {
-  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    const formData = new FormData(e.currentTarget);
+    const response = await signIn("credentials", {
+      email: formData.get("email"),
+      password: formData.get("password"),
+      redirect: false,
+    });
+
+    console.log({ response });
+    if (response?.error) {
+      setErrorMessage("Thông tin không chính xác.");
+    } else {
+      router.push("/dashboard");
+      router.refresh();
+    }
+    setIsSubmitting(false);
+  };
   return (
-    <form action={dispatch} className="space-y-3">
+    <form onSubmit={handleSubmit} className="space-y-3">
       <div className="flex-1">
         <h1 className={`${lusitana.className} mb-3 text-gray-900 text-2xl`}>
           Đăng nhập với email.
@@ -61,31 +84,29 @@ export default function LoginForm() {
             </div>
           </div>
         </div>
-        <LoginButton />
-        <div
-          className="flex h-8 items-end space-x-1"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          {errorMessage && (
-            <>
-              <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-              <p className="text-sm text-red-500">{errorMessage}</p>
-            </>
-          )}
-        </div>
+        {errorMessage && ( // Render error message if present
+          <div className="flex items-center text-red-500 text-sm mt-1">
+            <ExclamationCircleIcon className="h-4 w-4 mr-1" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+        <LoginButton isSubmitting={isSubmitting} />
       </div>
     </form>
   );
 }
 
-function LoginButton() {
-  const { pending } = useFormStatus();
+interface LoginButton {
+  isSubmitting: boolean;
+}
+
+function LoginButton({ isSubmitting }: LoginButton) {
   return (
     <div className="flex items-start justify-end">
       <Button
-        className="mt-4 gap-5 bg-emerald-700 hover:bg-emerald-500 active:bg-yellow-700"
-        aria-disabled={pending}
+        type="submit"
+        className="mt-4 gap-5 bg-emerald-500 hover:bg-yellow-700 active:bg-emerald-700"
+        aria-disabled={isSubmitting}
       >
         Xác nhận
         <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />

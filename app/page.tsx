@@ -1,8 +1,14 @@
 import Image from "next/image";
 import "@/app/ui/global.css";
 import LoginForm from "@/app/ui/login-form";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession();
+  if (session) {
+    redirect("/");
+  }
   return (
     <main className="bg-neutral-100 min-h-screen flex-col items-center justify-between">
       <div className="flex min-h-full flex-1 flex-col justify-center items-center px-6 py-12 lg:px-8">
