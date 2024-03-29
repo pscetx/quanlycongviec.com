@@ -5,7 +5,7 @@ import {
 } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 
-export default function Status({ status }: { status: string }) {
+export default function JobStatus({ status }: { status: string }) {
   return (
     <span
       className={clsx(

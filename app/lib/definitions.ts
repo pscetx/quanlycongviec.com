@@ -1,6 +1,6 @@
-export type Account = {
+export type Accounts = {
     user_id: string;
-    name: string;
+    user_name: string;
     email: string;
     password: string;
     date_of_birth: string;
@@ -8,14 +8,14 @@ export type Account = {
     profile_url: string;
 };
 
-export type Category = {
+export type Categories = {
     user_id: string;
     category: string;
 };
 
-export type Project = {
+export type Projects = {
     project_id: string;
-    name: string;
+    project_name: string;
     creator_id: string;
     start_date: string;
     end_date: string;
@@ -23,20 +23,20 @@ export type Project = {
     description: string;
 };
 
-export type ProjectAdmin = {
+export type ProjectsAdmins = {
     user_id: string;
     project_id: string;
 };
 
-export type ProjectMember = {
+export type ProjectsMembers = {
     user_id: string;
     project_id: string;
 };
 
-export type Job = {
+export type Jobs = {
     job_id: string;
     project_id: string;
-    name: string;
+    job_name: string;
     creator_id: string;
     description: string;
     status: 'Chưa làm' | 'Đang làm' | 'Đã làm';
@@ -44,15 +44,24 @@ export type Job = {
     result_url: string;
 };
 
-export type JobMember = {
+export type JobsMembers = {
     user_id: string;
     job_id: string;
 };
 
-export type Report = {
+export type Reports = {
     report_id: string;
     project_id: string;
-    name: string;
+    report_name: string;
     creator_id: string;
     created_at: string;
+};
+
+export type ProjectsTable = {
+    project_id: string;
+    project_name: string;
+    start_date: string;
+    end_date: string;
+    category: string;
+    user_name: string;
 };

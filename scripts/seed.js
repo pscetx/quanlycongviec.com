@@ -1,17 +1,16 @@
 const { db } = require('@vercel/postgres');
 const {
-  account,
+  accounts,
 } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
 async function seedAccounts(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-    // Create the "account" table if it doesn't exist
     const createTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS account (
+      CREATE TABLE IF NOT EXISTS accounts (
         user_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
+        account_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
         date_of_birth DATE NOT NULL,
@@ -20,20 +19,19 @@ async function seedAccounts(client) {
     );
     `;
 
-    console.log(`Created "account" table`);
+    console.log(`Created "accounts" table`);
 
-    // Insert data into the "account" table
     const insertedUsers = await Promise.all(
-      account.map(async (account) => {
+      accounts.map(async (account) => {
         const hashedPassword = await bcrypt.hash(account.password, 10);
         return client.sql`
-        INSERT INTO "account" (name, email, password, date_of_birth, phone, profile_url)
-        VALUES (${account.name}, ${account.email}, ${hashedPassword}, ${account.date_of_birth}, ${account.phone}, ${account.profile_url});
+        INSERT INTO "accounts" (user_name, email, password, date_of_birth, phone, profile_url)
+        VALUES (${account.user_name}, ${account.email}, ${hashedPassword}, ${account.date_of_birth}, ${account.phone}, ${account.profile_url});
       `;
       }),
     );
 
-    console.log(`Seeded ${insertedUsers.length} user`);
+    console.log(`Seeded ${insertedUsers.length} accounts`);
 
     return {
       createTable,

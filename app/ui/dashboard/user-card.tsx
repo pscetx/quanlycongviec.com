@@ -14,8 +14,8 @@ type Props = {
 
 export default async function Card({ user, pagetype }: Props) {
   const response = await sql`
-    SELECT name, profile_url FROM account WHERE email=${user?.email}`;
-  const name = response.rows[0]?.name;
+    SELECT user_name, profile_url FROM accounts WHERE email=${user?.email}`;
+  const name = response.rows[0]?.user_name;
   const url = response.rows[0]?.profile_url;
 
   const nameDisplay = name ? <div>{name}</div> : null;

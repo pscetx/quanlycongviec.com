@@ -2,12 +2,12 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { compare } from 'bcrypt';
 import { sql } from '@vercel/postgres';
-import type { Account } from '@/app/lib/definitions';
+import type { Accounts } from '@/app/lib/definitions';
 import { z } from 'zod';
 
-async function getUser(email: string): Promise<Account | undefined> {
+async function getUser(email: string): Promise<Accounts | undefined> {
   try {
-    const user = await sql<Account>`SELECT * FROM account WHERE email=${email}`;
+    const user = await sql<Accounts>`SELECT * FROM accounts WHERE email=${email}`;
     return user.rows[0];
   } catch (error) {
     console.error('Failed to fetch user:', error);
