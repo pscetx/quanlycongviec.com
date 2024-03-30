@@ -65,3 +65,8 @@ export type ProjectsTable = {
     category: string;
     user_name: string;
 };
+
+export type MembersProfilesList = {
+    project_id: string;
+    profile_url: string;
+};

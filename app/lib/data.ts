@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import {ProjectsTable } from './definitions';
+import { ProjectsTable, MembersProfilesList } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 import { getServerSession, Session } from "next-auth";
 
@@ -74,5 +74,25 @@ export async function fetchProjectsPages(query: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch total number of projects.');
+  }
+}
+
+export async function fetchMembersProfilesList(id: string) {
+  noStore();
+  try {
+    const data = await sql<MembersProfilesList>`
+      SELECT DISTINCT accounts.profile_url
+      FROM accounts
+      JOIN projectsmembers ON projectsmembers.user_id = accounts.user_id
+      WHERE projectsmembers.project_id = ${id}
+      LIMIT 5`;
+
+    const profilesList = data.rows.map((project) => ({
+      ...project,
+    }));
+    return profilesList;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch the latest invoices.');
   }
 }

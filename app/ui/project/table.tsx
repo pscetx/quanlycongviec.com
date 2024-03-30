@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { formatDateToLocal } from "@/app/lib/utils";
 import { fetchSearchedProjects } from "@/app/lib/data";
+import MembersProfilesList from "./member-list";
 
 export default async function ProjectsTable({
   query,
@@ -68,6 +68,7 @@ export default async function ProjectsTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center">
                       <p>{project.project_name}</p>
+                      <MembersProfilesList id={project.project_id} />
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
