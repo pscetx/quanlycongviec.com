@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import Image from "next/image";
-import { MembersProfilesList } from "@/app/lib/definitions";
 import { fetchMembersProfilesList } from "@/app/lib/data";
 
 export default async function MembersProfilesList({ id }: { id: string }) {
