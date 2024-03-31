@@ -18,7 +18,7 @@ export default async function Card({ user, pagetype }: Props) {
   const name = response.rows[0]?.user_name;
   const url = response.rows[0]?.profile_url;
 
-  const nameDisplay = name ? <div>{name}</div> : null;
+  const nameDisplay = name ? <div className="font-bold">{name}</div> : null;
 
   const userImage = url ? (
     <Image

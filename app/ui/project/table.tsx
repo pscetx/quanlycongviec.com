@@ -15,7 +15,7 @@ export default async function ProjectsTable({
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+        <div className="rounded-lg bg-neutral-300 p-2">
           <div className="md:hidden">
             {projects?.map((project) => (
               <div
@@ -43,39 +43,47 @@ export default async function ProjectsTable({
             ))}
           </div>
           <div className="hidden min-w-full text-gray-900 md:table">
-            <div className="bg-white">
-              {projects?.map((project) => (
-                <div
-                  key={project.project_id}
-                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                >
-                  <div className="whitespace-nowrap p-3">
-                    <div className="flex items-center">
-                      <p
-                        className={`${lusitana.className} text-xl font-extrabold text-emerald-800`}
-                      >
-                        {project.project_name}
-                      </p>
-                      <MembersProfilesList id={project.project_id} />
-                    </div>
-                  </div>
-                  <div className="flex flex-row pl-3 pr-3 items-end justify-between">
-                    <div className="flex flex-col italic">
-                      <div>
-                        {"Ngày bắt đầu : " +
-                          formatDateToLocal(project.start_date)}
-                      </div>
-                      <div>
-                        {"Ngày kết thúc: " +
-                          formatDateToLocal(project.end_date)}
-                      </div>
-                    </div>
-                    <div>{"Phân loại: " + project.category}</div>
-                    <div>{"Người tạo: " + project.user_name}</div>
+            {projects?.map((project) => (
+              <div
+                key={project.project_id}
+                className="w-full rounded-md bg-neutral-100 hover:bg-emerald-100 transition duration-300 ease-in-out border-b-4 border-neutral-300 py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+              >
+                <div className="whitespace-nowrap p-3 pt-0">
+                  <div className="flex items-center">
+                    <p
+                      className={`${lusitana.className} text-xl font-extrabold text-emerald-800`}
+                    >
+                      {project.project_name}
+                    </p>
+                    <MembersProfilesList id={project.project_id} />
                   </div>
                 </div>
-              ))}
-            </div>
+                <div className="flex flex-row pl-3 pr-3 items-end justify-between justify-items-center">
+                  <div className="flex flex-col w-full">
+                    <div>
+                      {"Ngày bắt đầu:"}
+                      <span className="italic pl-2">
+                        {formatDateToLocal(project.start_date)}
+                      </span>
+                    </div>
+                    <div>
+                      {"Ngày kết thúc:"}
+                      <span className="italic pl-2">
+                        {formatDateToLocal(project.end_date)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex w-full">
+                    {"Phân loại:"}
+                    <span className="font-bold pl-2">{project.category}</span>
+                  </div>
+                  <div className="flex w-full">
+                    {"Người tạo:"}
+                    <span className="font-bold pl-2">{project.user_name}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

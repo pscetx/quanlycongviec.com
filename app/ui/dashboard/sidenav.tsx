@@ -22,7 +22,7 @@ export default async function SideNav() {
         <NavLinks />
         <div className="hidden h-auto w-full grow bg-neutral-800 rounded-md md:block"></div>
         <Link
-          className="flex h-[48px] w-full grow bg-neutral-800 items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-emerald-300 hover:text-green-600 md:flex-none md:justify-start md:p-2 md:px-3"
+          className="flex h-[48px] w-full grow bg-neutral-800 items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-emerald-300 hover:text-green-600 transition duration-300 ease-in-out md:flex-none md:justify-start md:p-2 md:px-3"
           href="/dashboard/account"
         >
           <section className="flex flex-col gap-6">

@@ -105,7 +105,7 @@ function LoginButton({ isSubmitting }: LoginButton) {
     <div className="flex items-start justify-end">
       <Button
         type="submit"
-        className="mt-4 gap-5 bg-emerald-500 hover:bg-yellow-700 active:bg-emerald-700"
+        className="mt-4 gap-5 bg-emerald-500 hover:bg-yellow-700 active:bg-emerald-700 transition duration-300 ease-in-out"
         aria-disabled={isSubmitting}
       >
         Xác nhận
