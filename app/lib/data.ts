@@ -84,8 +84,7 @@ export async function fetchMembersProfilesList(id: string) {
       SELECT DISTINCT accounts.profile_url
       FROM accounts
       JOIN projectsmembers ON projectsmembers.user_id = accounts.user_id
-      WHERE projectsmembers.project_id = ${id}
-      LIMIT 5`;
+      WHERE projectsmembers.project_id = ${id}`;
 
     const profilesList = data.rows.map((project) => ({
       ...project,
