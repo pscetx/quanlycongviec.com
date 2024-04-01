@@ -1,10 +1,11 @@
 import Pagination from "@/app/ui/pagination";
 import Search from "@/app/ui/search";
-import Table from "@/app/ui/project/table";
+import Table from "@/app/ui/projects/table";
 import { lusitana } from "@/app/ui/fonts";
 import { Suspense } from "react";
 import { fetchProjectsPages } from "@/app/lib/data";
 import { Metadata } from "next";
+import DashboardSkeleton from "@/app/ui/skeletons";
 
 export const metadata: Metadata = {
   title: "Danh sách dự án",
@@ -32,7 +33,7 @@ export default async function Page({
         <Search placeholder="Tìm kiếm dự án..." />
       </div>
       {
-        <Suspense key={query + currentPage}>
+        <Suspense fallback={<DashboardSkeleton />} key={query + currentPage}>
           <Table query={query} currentPage={currentPage} />
         </Suspense>
       }

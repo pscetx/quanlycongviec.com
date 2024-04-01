@@ -1,11 +1,11 @@
 import { sql } from '@vercel/postgres';
-import { ProjectsTable, MembersProfilesList } from './definitions';
+import { ProjectsTable, MembersProfilesList, MembersField } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 import { getServerSession, Session } from "next-auth";
 
 const ITEMS_PER_PAGE = 4;
 
-async function getCurrentUserId(session: Session | null): Promise<string> {
+export async function getCurrentUserId(session: Session | null): Promise<string> {
   const currentUserEmail = session?.user?.email;
   if (!currentUserEmail) {
     throw new Error('User email is not provided');
@@ -106,5 +106,22 @@ export async function fetchMembersProfilesList(id: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch the latest invoices.');
+  }
+}
+
+export async function fetchMembers() {
+  try {
+    const data = await sql<MembersField>`
+      SELECT
+        user_id,
+        user_name
+      FROM accounts
+      ORDER BY user_name ASC
+    `;
+    const members = data.rows;
+    return members;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all members.');
   }
 }

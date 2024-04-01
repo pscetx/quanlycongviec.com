@@ -34,12 +34,6 @@ export function ItemSkeleton() {
 export default function DashboardSkeleton() {
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <h1 className="h-8 w-40 rounded-md bg-neutral-100"></h1>
-      </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <div className="mb-2 h-10 w-full rounded-md bg-neutral-100" />
-      </div>
       <div className="mt-6 flow-root">
         <div className="inline-block min-w-full align-middle">
           <div className="rounded-lg bg-neutral-50 p-2">

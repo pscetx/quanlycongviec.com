@@ -70,3 +70,9 @@ export type MembersProfilesList = {
     project_id: string;
     profile_url: string;
 };
+
+export type MembersField = {
+    user_id: string;
+    user_name: string;
+    profile_url: string;
+};
