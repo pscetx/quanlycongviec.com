@@ -3,7 +3,7 @@ const shimmer =
 
 export function ItemSkeleton() {
   return (
-    <div className="w-full rounded-md bg-neutral-100 hover:bg-emerald-100 transition duration-300 ease-in-out border-b-8 border-neutral-50 py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+    <div className="w-full rounded-lg bg-neutral-100 hover:bg-emerald-100 transition duration-300 ease-in-out py-3 text-sm mb-2 last-of-type:mb-0 [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
       <div className="whitespace-nowrap p-3 pt-0">
         <div className="flex items-center justify-between">
           <p className="my-1 h-6 w-80 rounded-md bg-neutral-300"></p>

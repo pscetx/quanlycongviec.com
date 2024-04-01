@@ -5,6 +5,7 @@ import { lusitana } from "@/app/ui/fonts";
 import { Suspense } from "react";
 import { fetchProjectsPages } from "@/app/lib/data";
 import { Metadata } from "next";
+import { CreateProject } from "../ui/projects/buttons";
 import DashboardSkeleton from "@/app/ui/skeletons";
 
 export const metadata: Metadata = {
@@ -31,6 +32,7 @@ export default async function Page({
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Tìm kiếm dự án..." />
+        <CreateProject />
       </div>
       {
         <Suspense fallback={<DashboardSkeleton />} key={query + currentPage}>

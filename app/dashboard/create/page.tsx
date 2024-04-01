@@ -9,9 +9,9 @@ export default async function Page() {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Projects", href: "/dashboard/" },
+          { label: "Dự án", href: "/dashboard/" },
           {
-            label: "Create Projects",
+            label: "Tạo dự án",
             href: "/dashboard/create",
             active: true,
           },

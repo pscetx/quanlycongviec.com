@@ -13,9 +13,9 @@ const FormSchema = z.object({
   projectName: z.string({
     invalid_type_error: 'Please enter a name for the project.',
   }),
-  memberId: z.string({
+  memberIds: z.array(z.string({
     invalid_type_error: 'Please select a member.',
-  }),
+  })),
   startDate: z.string({
     invalid_type_error: 'Please select a start date.',
   }),
@@ -51,7 +51,7 @@ export async function createProject(prevState: State, formData: FormData) {
   // Validate form using Zod
   const validatedFields = CreateProject.safeParse({
     projectName: formData.get('projectName'),
-    memberId: formData.get('memberId'),
+    memberIds: formData.getAll('memberIds'),
     startDate: formData.get('startDate'),
     endDate: formData.get('endDate'),
     category: formData.get('category'),
@@ -70,7 +70,7 @@ export async function createProject(prevState: State, formData: FormData) {
   }
  
   // Prepare data for insertion into the database
-  const { projectName, memberId, startDate, endDate, category, description } = validatedFields.data;
+  const { projectName, memberIds, startDate, endDate, category, description } = validatedFields.data;
   const start = new Date(startDate).toISOString().split('T')[0];
   const end = new Date(endDate).toISOString().split('T')[0];
  
@@ -78,7 +78,7 @@ export async function createProject(prevState: State, formData: FormData) {
   try {
     const result: QueryResult<QueryResultRow> = await sql`
     INSERT INTO projects (project_name, creator_id, start_date, end_date, category, description)
-    VALUES (${projectName}, ${memberId}, ${start}, ${end}, ${category}, ${description})
+    VALUES (${projectName}, ${currentUserId}, ${start}, ${end}, ${category}, ${description})
     RETURNING project_id;
   `;
   
@@ -86,15 +86,20 @@ export async function createProject(prevState: State, formData: FormData) {
   const projectId = result.rows[0].project_id;
 
   await sql`
-      INSERT INTO projectsadmins (user_id, project_id)
-      VALUES (${currentUserId}, ${projectId});
+      INSERT INTO projectsmembers (user_id, project_id) VALUES (${currentUserId}, ${projectId});
     `;
   
-  await sql`
-      INSERT INTO projectsmembers (user_id, project_id)
-      VALUES (${memberId}, ${projectId}), (${currentUserId}, ${projectId});
-    `;
+  for (const memberId of memberIds) {
+      await sql`
+        INSERT INTO projectsmembers (user_id, project_id)
+        VALUES (${memberId}, ${projectId});
+      `;
+    }
     
+  await sql`
+      INSERT INTO projectsadmins (user_id, project_id) VALUES (${currentUserId}, ${projectId});
+    `;
+
   } catch (error) {
     // If a database error occurs, return a more specific error.
     return {

@@ -31,27 +31,36 @@ export async function fetchSearchedProjects(
 
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
     const projects = await sql<ProjectsTable>`
-      SELECT DISTINCT
-        projects.project_id,
-        projects.project_name,
-        projects.start_date,
-        projects.end_date,
-        projects.category,
-        accounts.user_name
-      FROM projects
-      JOIN accounts ON projects.creator_id = accounts.user_id
-      WHERE
-        (projects.project_name ILIKE ${`%${query}%`} OR
-        projects.category ILIKE ${`%${query}%`} OR
-        projects.start_date::text ILIKE ${`%${query}%`} OR
-        projects.end_date::text ILIKE ${`%${query}%`})
-        AND EXISTS (
-          SELECT 1
-          FROM projectsmembers
-          WHERE projectsmembers.user_id = ${currentUserId} AND projectsmembers.project_id = projects.project_id
-        )
-      ORDER BY projects.start_date DESC
-      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    SELECT DISTINCT
+      projects.project_id,
+      projects.project_name,
+      projects.start_date,
+      projects.end_date,
+      projects.category,
+      accounts.user_name
+    FROM projects
+    JOIN accounts ON projects.creator_id = accounts.user_id
+    WHERE
+    (
+      projects.project_name ILIKE ${`%${query}%`} OR
+      projects.category ILIKE ${`%${query}%`} OR
+      projects.start_date::text ILIKE ${`%${query}%`} OR
+      projects.end_date::text ILIKE ${`%${query}%`}
+    )
+    AND (
+      EXISTS (
+        SELECT 1
+        FROM projectsmembers
+        WHERE projectsmembers.user_id = ${currentUserId} AND projectsmembers.project_id = projects.project_id
+      )
+      OR EXISTS (
+        SELECT 1
+        FROM projectsadmins
+        WHERE projectsadmins.user_id = ${currentUserId} AND projectsadmins.project_id = projects.project_id
+      )
+    )
+    ORDER BY projects.project_name ASC
+    LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
     return projects.rows;
@@ -67,7 +76,8 @@ export async function fetchProjectsPages(query: string) {
     const session: Session | null = await getServerSession();
     const currentUserId = await getCurrentUserId(session);
 
-    const count = await sql`SELECT COUNT(*)
+    const count = await sql`
+    SELECT COUNT(*)
     FROM projects
       JOIN accounts ON projects.creator_id = accounts.user_id
       WHERE
@@ -75,12 +85,19 @@ export async function fetchProjectsPages(query: string) {
         projects.category ILIKE ${`%${query}%`} OR
         projects.start_date::text ILIKE ${`%${query}%`} OR
         projects.end_date::text ILIKE ${`%${query}%`})
-        AND EXISTS (
-          SELECT 1
-          FROM projectsmembers
-          WHERE projectsmembers.user_id = ${currentUserId} AND projectsmembers.project_id = projects.project_id
+        AND (
+          EXISTS (
+            SELECT 1
+            FROM projectsmembers
+            WHERE projectsmembers.user_id = ${currentUserId} AND projectsmembers.project_id = projects.project_id
+          )
+          OR EXISTS (
+            SELECT 1
+            FROM projectsadmins
+            WHERE projectsadmins.user_id = ${currentUserId} AND projectsadmins.project_id = projects.project_id
+          )
         )
-  `;
+    `;
 
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
     return totalPages;

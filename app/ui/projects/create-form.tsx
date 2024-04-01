@@ -3,10 +3,11 @@
 import { MembersField } from "@/app/lib/definitions";
 import Link from "next/link";
 import {
-  CheckIcon,
+  ClipboardDocumentListIcon,
+  TagIcon,
   ClockIcon,
-  CurrencyDollarIcon,
-  UserCircleIcon,
+  CalendarIcon,
+  BookOpenIcon,
 } from "@heroicons/react/24/outline";
 import { Button } from "@/app/ui/button";
 import { createProject } from "@/app/lib/actions";
@@ -19,77 +20,51 @@ export default function Form({ members }: { members: MembersField[] }) {
   return (
     <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        <div className="rounded-md bg-gray-50 p-4 md:p-6">
-          {/* Choose Members */}
-          <div className="mb-4">
-            <label htmlFor="members" className="mb-2 block text-sm font-medium">
-              Choose members
-            </label>
-            <div className="relative">
-              <select
-                id="members"
-                name="memberIds"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                defaultValue=""
-                multiple
-                aria-describedby="members-error"
-              >
-                {members.map((member) => (
-                  <option key={member.user_id} value={member.user_id}>
-                    {member.user_name}
-                  </option>
-                ))}
-              </select>
-              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            </div>
-          </div>
-        </div>
-
-        {/*Project's name */}
+        {/*Project's Name*/}
         <div className="mb-4">
           <label
             htmlFor="projectName"
             className="mb-2 block text-sm font-medium"
           >
-            Enter a name for the project.
+            Nhập tên dự án
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
                 id="projectName"
                 name="projectName"
-                placeholder="Enter name"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                placeholder=""
+                className="peer block w-full transition duration-200 ease-in-out rounded-md focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 py-[9px] pl-10 outline-2 text-sm text-black placeholder:text-gray-500"
                 required
               />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <ClipboardDocumentListIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
 
-        {/*Category */}
+        {/*Category*/}
         <div className="mb-4">
           <label htmlFor="category" className="mb-2 block text-sm font-medium">
-            Enter a category for the project.
+            Chọn phân loại
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
                 id="category"
                 name="category"
-                placeholder="Enter name"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                placeholder=""
+                className="peer block w-full transition duration-200 ease-in-out rounded-md focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 py-[9px] pl-10 outline-2 text-sm text-black placeholder:text-gray-500"
                 required
               />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
 
-        {/*StartDate Input */}
+        {/*Start Date Input*/}
         <div className="mb-4">
           <label htmlFor="startDate" className="mb-2 block text-sm font-medium">
-            Enter a date for the project.
+            Chọn ngày dự án bắt đầu
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -97,19 +72,19 @@ export default function Form({ members }: { members: MembersField[] }) {
                 type="date" // Using type "date" for inputting a date
                 id="startDate"
                 name="startDate"
-                placeholder="Enter date"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                placeholder=""
+                className="peer block w-full transition duration-200 ease-in-out rounded-md focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 py-[9px] px-2 pl-10 outline-2 text-sm text-black placeholder:text-gray-500"
                 required
               />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
 
-        {/*StartDate Input */}
+        {/*End Date Input */}
         <div className="mb-4">
           <label htmlFor="endDate" className="mb-2 block text-sm font-medium">
-            Enter a date for the project.
+            Chọn ngày dự án kết thúc
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -117,33 +92,59 @@ export default function Form({ members }: { members: MembersField[] }) {
                 type="date" // Using type "date" for inputting a date
                 id="endDate"
                 name="endDate"
-                placeholder="Enter date"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                placeholder=""
+                className="peer block w-full transition duration-200 ease-in-out rounded-md focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 py-[9px] px-2 pl-10 outline-2 text-sm text-black placeholder:text-gray-500"
                 required
               />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <ClockIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
 
-        {/*Desc */}
+        {/*Description*/}
         <div className="mb-4">
           <label
             htmlFor="description"
             className="mb-2 block text-sm font-medium"
           >
-            Enter a description for the project.
+            Nhập mô tả dự án
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
                 id="description"
                 name="description"
-                placeholder="Enter name"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                placeholder=""
+                className="peer block w-full transition duration-200 ease-in-out rounded-md focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 py-[9px] pl-10 outline-2 text-sm text-black placeholder:text-gray-500"
                 required
               />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <BookOpenIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+        </div>
+
+        {/*Choose Members*/}
+        <div className="mb-4">
+          <label htmlFor="members" className="mb-2 block text-sm font-medium">
+            Chọn thành viên dự án
+          </label>
+          <div className="relative">
+            <div className="inline-block relative w-full">
+              <select
+                id="members"
+                name="memberIds"
+                className="block appearance-none w-full bg-white text-gray-700 py-2 px-1 rounded-md leading-tight focus:outline-none focus:bg-white"
+                defaultValue=""
+                aria-describedby="members-error"
+                multiple
+              >
+                {members.map((member) => (
+                  <option key={member.user_id} value={member.user_id}>
+                    {member.user_name}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"></div>
             </div>
           </div>
         </div>
@@ -153,9 +154,11 @@ export default function Form({ members }: { members: MembersField[] }) {
           href="/dashboard/"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
-          Cancel
+          Hủy
         </Link>
-        <Button type="submit">Create Project</Button>
+        <Button type="submit" className="bg-emerald-600 hover:bg-emerald-500">
+          Tạo mới dự án
+        </Button>
       </div>
     </form>
   );
