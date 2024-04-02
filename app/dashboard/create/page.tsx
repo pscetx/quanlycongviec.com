@@ -1,9 +1,10 @@
 import Form from "@/app/ui/projects/create-form";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import { fetchMembers } from "@/app/lib/data";
+import { fetchMembers, fetchCategories } from "@/app/lib/data";
 
 export default async function Page() {
   const members = await fetchMembers();
+  const categories = await fetchCategories();
 
   return (
     <main>
@@ -17,7 +18,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form members={members} />
+      <Form members={members} categories={categories} />
     </main>
   );
 }

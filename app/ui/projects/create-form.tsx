@@ -13,7 +13,13 @@ import { Button } from "@/app/ui/button";
 import { createProject } from "@/app/lib/actions";
 import { useFormState } from "react-dom";
 
-export default function Form({ members }: { members: MembersField[] }) {
+export default function Form({
+  members,
+  categories,
+}: {
+  members: MembersField[];
+  categories: string[];
+}) {
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(createProject, initialState);
 
@@ -34,7 +40,7 @@ export default function Form({ members }: { members: MembersField[] }) {
                 id="projectName"
                 name="projectName"
                 placeholder=""
-                className="peer block w-full transition duration-200 ease-in-out rounded-md focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 py-[9px] pl-10 outline-2 text-sm text-black placeholder:text-gray-500"
+                className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 required
               />
               <ClipboardDocumentListIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -45,19 +51,26 @@ export default function Form({ members }: { members: MembersField[] }) {
         {/*Category*/}
         <div className="mb-4">
           <label htmlFor="category" className="mb-2 block text-sm font-medium">
-            Chọn phân loại
+            Chọn phân loại dự án
           </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="category"
-                name="category"
-                placeholder=""
-                className="peer block w-full transition duration-200 ease-in-out rounded-md focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 py-[9px] pl-10 outline-2 text-sm text-black placeholder:text-gray-500"
-                required
-              />
-              <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
+          <div className="relative">
+            <select
+              id="category"
+              name="category"
+              className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-9 text-sm outline-2 placeholder:text-gray-500"
+              defaultValue=""
+              aria-describedby="category-error"
+            >
+              <option value="" disabled>
+                Chọn phân loại
+              </option>
+              {categories.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+            <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
         </div>
 
@@ -69,11 +82,11 @@ export default function Form({ members }: { members: MembersField[] }) {
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                type="date" // Using type "date" for inputting a date
+                type="date"
                 id="startDate"
                 name="startDate"
                 placeholder=""
-                className="peer block w-full transition duration-200 ease-in-out rounded-md focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 py-[9px] px-2 pl-10 outline-2 text-sm text-black placeholder:text-gray-500"
+                className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pr-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 required
               />
               <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -89,11 +102,11 @@ export default function Form({ members }: { members: MembersField[] }) {
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                type="date" // Using type "date" for inputting a date
+                type="date"
                 id="endDate"
                 name="endDate"
                 placeholder=""
-                className="peer block w-full transition duration-200 ease-in-out rounded-md focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 py-[9px] px-2 pl-10 outline-2 text-sm text-black placeholder:text-gray-500"
+                className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pr-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 required
               />
               <ClockIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -115,7 +128,7 @@ export default function Form({ members }: { members: MembersField[] }) {
                 id="description"
                 name="description"
                 placeholder=""
-                className="peer block w-full transition duration-200 ease-in-out rounded-md focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 py-[9px] pl-10 outline-2 text-sm text-black placeholder:text-gray-500"
+                className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 required
               />
               <BookOpenIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -133,7 +146,7 @@ export default function Form({ members }: { members: MembersField[] }) {
               <select
                 id="members"
                 name="memberIds"
-                className="block appearance-none w-full bg-white text-gray-700 py-2 px-1 rounded-md leading-tight focus:outline-none focus:bg-white"
+                className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-2 text-sm outline-2 placeholder:text-gray-500"
                 defaultValue=""
                 aria-describedby="members-error"
                 multiple
@@ -151,7 +164,7 @@ export default function Form({ members }: { members: MembersField[] }) {
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/"
+          href="/dashboard"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Hủy

@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { ProjectsTable, MembersProfilesList, MembersField } from './definitions';
+import { ProjectsTable, MembersProfilesList, MembersField, Categories } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 import { getServerSession, Session } from "next-auth";
 
@@ -22,7 +22,7 @@ export async function getCurrentUserId(session: Session | null): Promise<string>
 
 export async function fetchSearchedProjects(
   query: string,
-  currentPage: number
+  currentPage: number,
 ) {
   noStore();
   try {
@@ -59,7 +59,7 @@ export async function fetchSearchedProjects(
         WHERE projectsadmins.user_id = ${currentUserId} AND projectsadmins.project_id = projects.project_id
       )
     )
-    ORDER BY projects.project_name ASC
+    ORDER BY category ASC
     LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
@@ -127,12 +127,18 @@ export async function fetchMembersProfilesList(id: string) {
 }
 
 export async function fetchMembers() {
+
+  const session: Session | null = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+
   try {
     const data = await sql<MembersField>`
       SELECT
         user_id,
-        user_name
+        user_name,
+        profile_url
       FROM accounts
+      WHERE user_id != ${currentUserId}
       ORDER BY user_name ASC
     `;
     const members = data.rows;
@@ -140,5 +146,25 @@ export async function fetchMembers() {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch all members.');
+  }
+}
+
+export async function fetchCategories() {
+
+  const session: Session | null = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+  
+  try {
+    const data = await sql<Categories>`
+      SELECT
+        category
+      FROM categories
+      WHERE user_id = ${currentUserId}
+    `;
+    const categories = data.rows.map(row => row.category);
+    return categories;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all categories.');
   }
 }

@@ -32,7 +32,6 @@ const FormSchema = z.object({
  
 const CreateProject = FormSchema.omit({ id: true, date: true });
 
-// Use Zod to update the expected types
 const UpdateProject = FormSchema.omit({ id: true, date: true });
 
 export type State = {
@@ -48,7 +47,6 @@ export type State = {
 };
  
 export async function createProject(prevState: State, formData: FormData) {
-  // Validate form using Zod
   const validatedFields = CreateProject.safeParse({
     projectName: formData.get('projectName'),
     memberIds: formData.getAll('memberIds'),
@@ -61,7 +59,6 @@ export async function createProject(prevState: State, formData: FormData) {
   const session: Session | null = await getServerSession();
   const currentUserId = await getCurrentUserId(session);
  
-  // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
@@ -69,12 +66,10 @@ export async function createProject(prevState: State, formData: FormData) {
     };
   }
  
-  // Prepare data for insertion into the database
   const { projectName, memberIds, startDate, endDate, category, description } = validatedFields.data;
   const start = new Date(startDate).toISOString().split('T')[0];
   const end = new Date(endDate).toISOString().split('T')[0];
  
-  // Insert data into the database
   try {
     const result: QueryResult<QueryResultRow> = await sql`
     INSERT INTO projects (project_name, creator_id, start_date, end_date, category, description)
@@ -82,7 +77,6 @@ export async function createProject(prevState: State, formData: FormData) {
     RETURNING project_id;
   `;
   
-  // Access the project_id from the result
   const projectId = result.rows[0].project_id;
 
   await sql`
@@ -101,7 +95,6 @@ export async function createProject(prevState: State, formData: FormData) {
     `;
 
   } catch (error) {
-    // If a database error occurs, return a more specific error.
     return {
       ...prevState,
     message: 'Project created successfully.',
@@ -109,7 +102,6 @@ export async function createProject(prevState: State, formData: FormData) {
     };
   }
  
-  // Revalidate the cache for the invoices page and redirect the user.
   revalidatePath('/dashboard/');
   redirect('/dashboard/');
 }
