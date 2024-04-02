@@ -45,7 +45,11 @@ export default async function Page({
         <CreateProject />
       </div>
       {
-        <Suspense fallback={<DashboardSkeleton />} key={query + currentPage}>
+        <Suspense
+          key={query + currentPage}
+          fallback={<DashboardSkeleton />}
+          key={query + currentPage}
+        >
           <ProjectsTable query={query} currentPage={currentPage} />
         </Suspense>
       }
