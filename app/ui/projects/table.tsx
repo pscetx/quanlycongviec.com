@@ -2,6 +2,7 @@ import { lusitana } from "@/app/ui/fonts";
 import { formatDateToLocal } from "@/app/lib/utils";
 import { fetchSearchedProjects } from "@/app/lib/data";
 import MembersProfilesList from "./member-list";
+import { UpdateProject, DeleteProject } from "./buttons";
 
 export default async function ProjectsTable({
   query,
@@ -50,6 +51,7 @@ export default async function ProjectsTable({
                     </p>
                     <p>Ngày kết thúc: {formatDateToLocal(project.end_date)}</p>
                   </div>
+                  <UpdateProject id={project.project_id} />
                   <div className="flex justify-end gap-2"></div>
                 </div>
               </div>
@@ -94,6 +96,8 @@ export default async function ProjectsTable({
                     {"Người tạo:"}
                     <span className="font-bold pl-2">{project.user_name}</span>
                   </div>
+                  <UpdateProject id={project.project_id} />
+                  <DeleteProject id={project.project_id} />
                 </div>
               </div>
             ))}

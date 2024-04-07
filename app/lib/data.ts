@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { ProjectsTable, MembersProfilesList, MembersField, Categories } from './definitions';
+import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 import { getServerSession, Session } from "next-auth";
 
@@ -127,7 +127,7 @@ export async function fetchMembersProfilesList(id: string) {
 }
 
 export async function fetchMembers() {
-
+  noStore();
   const session: Session | null = await getServerSession();
   const currentUserId = await getCurrentUserId(session);
 
@@ -150,7 +150,7 @@ export async function fetchMembers() {
 }
 
 export async function fetchCategories() {
-
+  noStore();
   const session: Session | null = await getServerSession();
   const currentUserId = await getCurrentUserId(session);
   
@@ -166,5 +166,38 @@ export async function fetchCategories() {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch all categories.');
+  }
+}
+
+export async function fetchProjectById(id: string) {
+  noStore();
+  const session: Session | null = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+
+  try {
+    const data = await sql<ProjectForm>`
+      SELECT
+        projects.project_id,
+        projects.project_name,
+        projects.category,
+        projects.start_date,
+        projects.end_date,
+        projects.description,
+        categories.category
+      FROM projects
+      JOIN 
+        categories ON categories.user_id = ${currentUserId}
+      WHERE projects.project_id = ${id};
+    `;
+
+    const project = data.rows.map((project) => ({
+      ...project,
+    }));
+
+    console.log(project);
+    return project[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch project.');
   }
 }

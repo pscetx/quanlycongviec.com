@@ -76,3 +76,13 @@ export type MembersField = {
     user_name: string;
     profile_url: string;
 };
+
+export type ProjectForm = {
+    project_id: string;
+    project_name: string;
+    start_date: string;
+    end_date: string;
+    category: string;
+    user_name: string;
+    description: string;
+};

@@ -26,6 +26,7 @@ export function ItemSkeleton() {
         <div className="flex w-full">
           <div className="h-4 w-40 rounded-md bg-neutral-300"></div>
         </div>
+        <div className="h-4 w-80 rounded-md bg-neutral-200"></div>
       </div>
     </div>
   );

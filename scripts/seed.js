@@ -8,15 +8,15 @@ async function seedAccounts(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
     const createTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS accounts (
+      CREATE TABLE accounts (
         user_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        account_name VARCHAR(255) NOT NULL,
+        user_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
-        date_of_birth DATE NOT NULL,
-        phone VARCHAR(255) NOT NULL,
-        profile_url VARCHAR(255) NOT NULL
-    );
+        date_of_birth DATE,
+        phone VARCHAR(255),
+        profile_url VARCHAR(255)
+      );
     `;
 
     console.log(`Created "accounts" table`);

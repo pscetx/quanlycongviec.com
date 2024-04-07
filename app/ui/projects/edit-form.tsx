@@ -1,7 +1,6 @@
 "use client";
 
-import { MembersField } from "@/app/lib/definitions";
-import Link from "next/link";
+import { MembersField, ProjectForm } from "@/app/lib/definitions";
 import {
   ClipboardDocumentListIcon,
   TagIcon,
@@ -9,22 +8,24 @@ import {
   CalendarIcon,
   BookOpenIcon,
 } from "@heroicons/react/24/outline";
+import Link from "next/link";
 import { Button } from "@/app/ui/button";
-import { createProject } from "@/app/lib/actions";
-import { useFormState } from "react-dom";
+import { DeleteProject } from "./buttons";
+import { updateProject } from "@/app/lib/actions";
 
-export default function Form({
+export default function EditInvoiceForm({
+  project,
   members,
   categories,
 }: {
+  project: ProjectForm;
   members: MembersField[];
   categories: string[];
 }) {
-  const initialState = { message: "", errors: {} };
-  const [state, dispatch] = useFormState(createProject, initialState);
+  const updateProjectWithId = updateProject.bind(null, project.project_id);
 
   return (
-    <form action={dispatch}>
+    <form action={updateProjectWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/*Project's Name*/}
         <div className="mb-4">
@@ -39,7 +40,7 @@ export default function Form({
               <input
                 id="projectName"
                 name="projectName"
-                placeholder=""
+                defaultValue={project.project_name}
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 required
               />
@@ -58,7 +59,7 @@ export default function Form({
               id="category"
               name="category"
               className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-9 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue=""
+              defaultValue={project.category}
               aria-describedby="category-error"
             >
               <option value="" disabled>
@@ -86,7 +87,9 @@ export default function Form({
                 type="date"
                 id="startDate"
                 name="startDate"
-                placeholder=""
+                defaultValue={
+                  project.start_date ? adjustToICT(project.start_date) : ""
+                }
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pr-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
               <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -105,7 +108,9 @@ export default function Form({
                 type="date"
                 id="endDate"
                 name="endDate"
-                placeholder=""
+                defaultValue={
+                  project.end_date ? adjustToICT(project.end_date) : ""
+                }
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pr-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
               <ClockIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -126,7 +131,7 @@ export default function Form({
               <textarea
                 id="description"
                 name="description"
-                placeholder=""
+                defaultValue={project.description}
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
               <BookOpenIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -162,7 +167,7 @@ export default function Form({
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard"
+          href="/dashboard/"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Hủy
@@ -171,9 +176,21 @@ export default function Form({
           type="submit"
           className="bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700"
         >
-          Tạo mới dự án
+          Xác nhận
         </Button>
       </div>
     </form>
   );
+}
+
+function adjustToICT(dateString: string) {
+  const date = new Date(dateString);
+  const offset = 7 * 60 * 60 * 1000; // Offset in milliseconds for GMT+7 (7 hours ahead of GMT)
+  const utcTimestamp = date.getTime() + date.getTimezoneOffset() * 60 * 1000;
+  const ictTimestamp = utcTimestamp + offset;
+  const ictDate = new Date(ictTimestamp);
+  const year = ictDate.getFullYear();
+  const month = String(ictDate.getMonth() + 1).padStart(2, "0");
+  const day = String(ictDate.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }

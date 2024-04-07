@@ -32,8 +32,6 @@ const FormSchema = z.object({
  
 const CreateProject = FormSchema.omit({ id: true, date: true });
 
-const UpdateProject = FormSchema.omit({ id: true, date: true });
-
 export type State = {
   errors: {
     projectName?: string[] | undefined;
@@ -106,35 +104,56 @@ export async function createProject(prevState: State, formData: FormData) {
   redirect('/dashboard/');
 }
 
-// export async function updateInvoice(id: string, formData: FormData) {
-//   const { customerId, amount, status } = UpdateInvoice.parse({
-//     customerId: formData.get('customerId'),
-//     amount: formData.get('amount'),
-//     status: formData.get('status'),
-//   });
- 
-//   const amountInCents = amount * 100;
- 
-//   try {
-//     await sql`
-//         UPDATE invoices
-//         SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
-//         WHERE id = ${id}
-//       `;
-//   } catch (error) {
-//     return { message: 'Database Error: Failed to Update Invoice.' };
-//   }
- 
-//   revalidatePath('/dashboard/invoices');
-//   redirect('/dashboard/invoices');
-// }
+const UpdateProject = FormSchema.omit({ id: true, date: true });
 
-// export async function deleteInvoice(id: string) {
-//   try {
-//     await sql`DELETE FROM invoices WHERE id = ${id}`;
-//     revalidatePath('/dashboard/invoices');
-//     return { message: 'Deleted Invoice.' };
-//   } catch (error) {
-//     return { message: 'Database Error: Failed to Delete Invoice.' };
-//   }
-// }
+export async function updateProject(id: string, formData: FormData) {
+  const { projectName, memberIds, startDate, endDate, category, description } = UpdateProject.parse({
+    projectName: formData.get('projectName'),
+    memberIds: formData.getAll('memberIds') || [],
+    startDate: formData.get('startDate'),
+    endDate: formData.get('endDate'),
+    category: formData.get('category'),
+    description: formData.get('description'),
+  });
+
+  const session: Session | null = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+ 
+  try {
+    await sql`
+        UPDATE projects
+        SET project_name = ${projectName}, start_date = ${startDate}, end_date = ${endDate}, category = ${category}, description = ${description} 
+        WHERE project_id = ${id}
+      `;
+    
+    await sql`
+        DELETE FROM projectsmembers
+        WHERE project_id = ${id}
+        AND user_id != ${currentUserId}
+      `;
+    
+    for (const memberId of memberIds) {
+      await sql`
+        INSERT INTO projectsmembers (user_id, project_id)
+        VALUES (${memberId}, ${id});
+      `;
+    }
+  } catch (error) {
+    return { message: 'Database Error: Failed to Update Project.' };
+  }
+ 
+  revalidatePath('/dashboard/');
+  redirect('/dashboard/');
+}
+
+export async function deleteProject(id: string) {
+  try {
+    await sql`DELETE FROM projectsadmins WHERE project_id = ${id}`;
+    await sql`DELETE FROM projectsmembers WHERE project_id = ${id}`;
+    await sql`DELETE FROM projects WHERE project_id = ${id}`;
+    revalidatePath('/dashboard/');
+    return { message: 'Deleted Project.' };
+  } catch (error) {
+    return { message: 'Database Error: Failed to Delete Project.' };
+  }
+}

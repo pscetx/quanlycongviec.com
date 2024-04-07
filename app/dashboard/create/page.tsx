@@ -12,7 +12,7 @@ export default async function Page() {
         breadcrumbs={[
           { label: "Dự án", href: "/dashboard/" },
           {
-            label: "Tạo dự án",
+            label: "Tạo mới",
             href: "/dashboard/create",
             active: true,
           },

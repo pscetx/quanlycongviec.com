@@ -31,25 +31,11 @@ export default async function Page({
         <h1 className={`${lusitana.className} text-2xl`}>Danh sách dự án</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <select>
-          <option value="project_name">Tên dự án</option>
-          <option value="category">Danh mục</option>
-          <option value="start_date">Ngày bắt đầu</option>
-          <option value="end_date">Ngày kết thúc</option>
-        </select>
-        <select>
-          <option value="ASC">Tăng dần</option>
-          <option value="DESC">Giảm dần</option>
-        </select>
-        <Search placeholder="Tìm kiếm dự án..." />
+        <Search placeholder="Tìm dự án theo tên, phân loại, ngày.." />
         <CreateProject />
       </div>
       {
-        <Suspense
-          key={query + currentPage}
-          fallback={<DashboardSkeleton />}
-          key={query + currentPage}
-        >
+        <Suspense key={query + currentPage} fallback={<DashboardSkeleton />}>
           <ProjectsTable query={query} currentPage={currentPage} />
         </Suspense>
       }

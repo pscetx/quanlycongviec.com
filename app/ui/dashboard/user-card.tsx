@@ -22,7 +22,7 @@ export default async function Card({ user, pagetype }: Props) {
 
   const userImage = url ? (
     <Image
-      className="rounded-full w-6"
+      className="rounded-full w-6 hidden md:inline-block"
       src={url}
       width={200}
       height={200}
