@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, Jobs, JobsMembersProfilesList } from './definitions';
+import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, JobsMembersProfilesList, JobsTable } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 import { getServerSession, Session } from "next-auth";
 
@@ -205,7 +205,7 @@ export async function fetchProjectById(id: string) {
 export async function fetchJobs(id: string) {
   noStore();
   try {
-    const jobs = await sql<Jobs>`
+    const jobs = await sql<JobsTable>`
     SELECT
       jobs.job_id,
       jobs.project_id,
@@ -214,8 +214,10 @@ export async function fetchJobs(id: string) {
       jobs.description,
       jobs.status,
       jobs.deadline,
-      jobs.result_url
+      jobs.result_url,
+      accounts.user_name
     FROM jobs
+    JOIN accounts ON jobs.creator_id = accounts.user_id
     WHERE jobs.project_id = ${id}
     ORDER BY jobs.deadline ASC
     `;

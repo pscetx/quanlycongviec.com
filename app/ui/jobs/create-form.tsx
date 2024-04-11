@@ -127,16 +127,13 @@ export default function Form({
 
         {/*Choose Members*/}
         <div className="mb-4">
-          <label
-            htmlFor="jobMemberIds"
-            className="mb-2 block text-sm font-medium"
-          >
+          <label htmlFor="members" className="mb-2 block text-sm font-medium">
             Chọn thành viên công việc
           </label>
           <div className="relative">
             <div className="inline-block relative w-full">
               <select
-                id="jobMemberIds"
+                id="members"
                 name="jobMemberIds"
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-2 text-sm outline-2 placeholder:text-gray-500"
                 defaultValue=""
@@ -195,7 +192,7 @@ export default function Form({
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href={`/dashboard/${id}/edit`}
+          href={`/dashboard/${id}`}
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Hủy

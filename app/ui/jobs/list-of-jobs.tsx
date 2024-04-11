@@ -28,10 +28,17 @@ export default async function JobsTable({ id }: { id: string }) {
               </div>
               <div className="flex flex-row pl-3 pr-3 justify-between items-center">
                 <div>
+                  <JobStatus status={job.status} />
+                </div>
+                <div>
                   {"Hạn hoàn thành:"}
-                  <span className="italic pl-2">
+                  <span className="font-bold pl-1">
                     {formatDateToLocal(job.deadline)}
                   </span>
+                </div>
+                <div>
+                  {"Người tạo:"}
+                  <span className="font-bold pl-1">{job.user_name}</span>
                 </div>
                 <div>
                   <JobStatus status={job.status} />

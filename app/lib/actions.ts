@@ -27,29 +27,7 @@ const FormSchema = z.object({
   }),
   description: z.string({
     invalid_type_error: 'Please enter a description.',
-  }),
-  jobId: z.string(),
-  projectId: z.string({
-    invalid_type_error: 'No project found',
-  }),
-  jobName: z.string({
-    invalid_type_error: 'Please enter a name for the job.',
-  }),
-  jobMemberIds: z.array(z.string({
-    invalid_type_error: 'Please select a member.',
-  })),
-  status: z.enum(['Chưa làm', 'Đang làm', 'Đã làm'], {
-    invalid_type_error: 'Please select a job status.',
-  }),
-  deadline: z.string({
-    invalid_type_error: 'Please select a deadline.',
-  }),
-  jobDescription: z.string({
-    invalid_type_error: 'Please enter a description.',
-  }),
-  resultUrl: z.string({
-    invalid_type_error: 'Please enter a result url.',
-  }),
+  })
 });
  
 const CreateProject = FormSchema.omit({ id: true });
@@ -180,7 +158,32 @@ export async function deleteProject(id: string) {
   }
 }
 
-const CreateJob = FormSchema.omit({ jobId: true });
+const JobFormSchema = z.object({
+  jobId: z.string(),
+  projectId: z.string({
+    invalid_type_error: 'No project found',
+  }),
+  jobName: z.string({
+    invalid_type_error: 'Please enter a name for the job.',
+  }),
+  jobMemberIds: z.array(z.string({
+    invalid_type_error: 'Please select a member.',
+  })),
+  status: z.enum(['Chưa làm', 'Đang làm', 'Đã làm'], {
+    invalid_type_error: 'Please select a job status.',
+  }),
+  deadline: z.string({
+    invalid_type_error: 'Please select a deadline.',
+  }),
+  jobDescription: z.string({
+    invalid_type_error: 'Please enter a description.',
+  }),
+  resultUrl: z.string({
+    invalid_type_error: 'Please enter a result url.',
+  }),
+});
+
+const CreateJob = JobFormSchema.omit({ jobId: true });
 
 export type JobState = {
   errors: {
@@ -217,7 +220,7 @@ export async function createJob(prevState: JobState, formData: FormData) {
   }
  
   const { projectId, jobName, jobMemberIds, status, deadline, jobDescription, resultUrl } = validatedFields.data;
-  const dl = new Date(deadline).toISOString().slice(0, 16);
+  const dl = new Date(deadline).toISOString().split('T')[0];
  
   try {
     const result: QueryResult<QueryResultRow> = await sql`

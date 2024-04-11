@@ -6,6 +6,11 @@ import {
   fetchProjectById,
 } from "@/app/lib/data";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Chi tiết dự án",
+};
 
 export default async function Page({
   params,
@@ -27,7 +32,7 @@ export default async function Page({
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: "Dự án", href: "/dashboard/" },
+          { label: "Danh sách dự án", href: "/dashboard/" },
           {
             label: project_name,
             href: `/dashboard/${project_id}/edit`,

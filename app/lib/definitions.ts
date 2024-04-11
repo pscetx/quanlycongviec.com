@@ -87,6 +87,16 @@ export type ProjectForm = {
     description: string;
 };
 
+export type JobsTable = {
+    job_id: string;
+    project_id: string;
+    job_name: string;
+    creator_id: string;
+    user_name: string;
+    status: 'Chưa làm' | 'Đang làm' | 'Đã làm';
+    deadline: string;
+};
+
 export type JobsMembersProfilesList = {
     job_id: string;
     profile_url: string;

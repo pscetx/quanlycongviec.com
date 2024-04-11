@@ -83,7 +83,7 @@ export default function Form({
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                type="datetime-local"
+                type="date"
                 id="startDate"
                 name="startDate"
                 placeholder=""
@@ -102,7 +102,7 @@ export default function Form({
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                type="datetime-local"
+                type="date"
                 id="endDate"
                 name="endDate"
                 placeholder=""
