@@ -28,9 +28,31 @@ const FormSchema = z.object({
   description: z.string({
     invalid_type_error: 'Please enter a description.',
   }),
+  jobId: z.string(),
+  projectId: z.string({
+    invalid_type_error: 'No project found',
+  }),
+  jobName: z.string({
+    invalid_type_error: 'Please enter a name for the job.',
+  }),
+  jobMemberIds: z.array(z.string({
+    invalid_type_error: 'Please select a member.',
+  })),
+  status: z.enum(['Chưa làm', 'Đang làm', 'Đã làm'], {
+    invalid_type_error: 'Please select a job status.',
+  }),
+  deadline: z.string({
+    invalid_type_error: 'Please select a deadline.',
+  }),
+  jobDescription: z.string({
+    invalid_type_error: 'Please enter a description.',
+  }),
+  resultUrl: z.string({
+    invalid_type_error: 'Please enter a result url.',
+  }),
 });
  
-const CreateProject = FormSchema.omit({ id: true, date: true });
+const CreateProject = FormSchema.omit({ id: true });
 
 export type State = {
   errors: {
@@ -104,7 +126,7 @@ export async function createProject(prevState: State, formData: FormData) {
   redirect('/dashboard/');
 }
 
-const UpdateProject = FormSchema.omit({ id: true, date: true });
+const UpdateProject = FormSchema.omit({ id: true });
 
 export async function updateProject(id: string, formData: FormData) {
   const { projectName, memberIds, startDate, endDate, category, description } = UpdateProject.parse({
@@ -156,4 +178,71 @@ export async function deleteProject(id: string) {
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Project.' };
   }
+}
+
+const CreateJob = FormSchema.omit({ jobId: true });
+
+export type JobState = {
+  errors: {
+    projectId?: string[] | undefined;
+    jobName?: string[] | undefined;
+    jobMemberId?: string[] | undefined;
+    status?: string[] | undefined;
+    deadline?: string[] | undefined;
+    jobDescription?: string[] | undefined;
+    resultUrl?: string[] | undefined;
+  };
+  message: string;
+};
+ 
+export async function createJob(prevState: JobState, formData: FormData) {
+  const validatedFields = CreateJob.safeParse({
+    projectId: formData.get('projectId'),
+    jobName: formData.get('jobName'),
+    jobMemberIds: formData.getAll('jobMemberIds'),
+    status: formData.get('status'),
+    deadline: formData.get('deadline'),
+    jobDescription: formData.get('jobDescription'),
+    resultUrl: formData.get('resultUrl'),
+  });
+
+  const session: Session | null = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+ 
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Job.',
+    };
+  }
+ 
+  const { projectId, jobName, jobMemberIds, status, deadline, jobDescription, resultUrl } = validatedFields.data;
+  const dl = new Date(deadline).toISOString().slice(0, 16);
+ 
+  try {
+    const result: QueryResult<QueryResultRow> = await sql`
+    INSERT INTO jobs (project_id, job_name, creator_id, status, deadline, description, result_url)
+    VALUES (${projectId}, ${jobName}, ${currentUserId}, ${status}, ${dl}, ${jobDescription}, ${resultUrl})
+    RETURNING job_id;
+  `;
+  
+  const jobId = result.rows[0].job_id;
+  
+  for (const jobMemberId of jobMemberIds) {
+      await sql`
+        INSERT INTO jobsmembers (user_id, job_id)
+        VALUES (${jobMemberId}, ${jobId});
+      `;
+    }
+
+  } catch (error) {
+    return {
+      ...prevState,
+    message: 'Job created successfully.',
+    errors: {},
+    };
+  }
+ 
+  revalidatePath(`/dashboard/${projectId}/edit`);
+  redirect(`/dashboard/${projectId}/edit`);
 }

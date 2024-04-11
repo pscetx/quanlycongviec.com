@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm } from './definitions';
+import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, Jobs, JobsMembersProfilesList } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 import { getServerSession, Session } from "next-auth";
 
@@ -122,7 +122,7 @@ export async function fetchMembersProfilesList(id: string) {
     return profilesList;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch the latest invoices.');
+    throw new Error('Failed to fetch the latest members.');
   }
 }
 
@@ -199,5 +199,49 @@ export async function fetchProjectById(id: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch project.');
+  }
+}
+
+export async function fetchJobs(id: string) {
+  noStore();
+  try {
+    const jobs = await sql<Jobs>`
+    SELECT
+      jobs.job_id,
+      jobs.project_id,
+      jobs.job_name,
+      jobs.creator_id,
+      jobs.description,
+      jobs.status,
+      jobs.deadline,
+      jobs.result_url
+    FROM jobs
+    WHERE jobs.project_id = ${id}
+    ORDER BY jobs.deadline ASC
+    `;
+
+    return jobs.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch jobs.');
+  }
+}
+
+export async function fetchJobsMembersProfilesList(id: string) {
+  noStore();
+  try {
+    const data = await sql<JobsMembersProfilesList>`
+      SELECT DISTINCT accounts.profile_url
+      FROM accounts
+      JOIN jobsmembers ON jobsmembers.user_id = accounts.user_id
+      WHERE jobsmembers.job_id = ${id}`;
+
+    const profilesList = data.rows.map((job) => ({
+      ...job,
+    }));
+    return profilesList;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch the latest members.');
   }
 }

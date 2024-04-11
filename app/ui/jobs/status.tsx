@@ -9,9 +9,9 @@ export default function JobStatus({ status }: { status: string }) {
   return (
     <span
       className={clsx(
-        "inline-flex items-center rounded-full px-2 py-1 text-xs",
+        "inline-flex items-center rounded-lg px-2 py-1 text-md font-bold",
         {
-          "bg-red-300 text-black": status === "Chưa làm",
+          "bg-red-500 text-white": status === "Chưa làm",
           "bg-yellow-300 text-black": status === "Đang làm",
           "bg-green-500 text-white": status === "Đã làm",
         }
@@ -19,19 +19,19 @@ export default function JobStatus({ status }: { status: string }) {
     >
       {status === "Chưa làm" ? (
         <>
-          Pending
-          <MinusCircleIcon className="ml-1 w-4 text-black" />
+          Chưa làm
+          <MinusCircleIcon className="ml-1 w-4 text-white" />
         </>
       ) : null}
       {status === "Đang làm" ? (
         <>
-          Pending
+          Đang làm
           <ClockIcon className="ml-1 w-4 text-black" />
         </>
       ) : null}
       {status === "Đã làm" ? (
         <>
-          Paid
+          Đã làm
           <CheckIcon className="ml-1 w-4 text-white" />
         </>
       ) : null}

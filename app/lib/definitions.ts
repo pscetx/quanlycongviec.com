@@ -86,3 +86,8 @@ export type ProjectForm = {
     user_name: string;
     description: string;
 };
+
+export type JobsMembersProfilesList = {
+    job_id: string;
+    profile_url: string;
+};
