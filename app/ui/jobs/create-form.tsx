@@ -55,7 +55,7 @@ export default function Form({
           <legend className="mb-2 block text-sm font-medium">
             Chọn trạng thái
           </legend>
-          <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
+          <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3 mb-3">
             <div className="flex gap-4">
               <div className="flex items-center">
                 <input
@@ -192,7 +192,7 @@ export default function Form({
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href={`/dashboard/${id}`}
+          href={`/dashboard/${id}/edit`}
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Hủy

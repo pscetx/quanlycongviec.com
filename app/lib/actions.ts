@@ -65,13 +65,10 @@ export async function createProject(prevState: State, formData: FormData) {
   }
  
   const { projectName, memberIds, startDate, endDate, category, description } = validatedFields.data;
-  const start = new Date(startDate).toISOString().split('T')[0];
-  const end = new Date(endDate).toISOString().split('T')[0];
- 
   try {
     const result: QueryResult<QueryResultRow> = await sql`
     INSERT INTO projects (project_name, creator_id, start_date, end_date, category, description)
-    VALUES (${projectName}, ${currentUserId}, ${start}, ${end}, ${category}, ${description})
+    VALUES (${projectName}, ${currentUserId}, ${startDate}, ${endDate}, ${category}, ${description})
     RETURNING project_id;
   `;
   
@@ -148,6 +145,12 @@ export async function updateProject(id: string, formData: FormData) {
 
 export async function deleteProject(id: string) {
   try {
+    const result: QueryResult<QueryResultRow> = await sql`SELECT job_id FROM jobs WHERE project_id = ${id}`;
+    const jobIds: string[] = result.rows.map((row) => row.job_id);
+    for (const jobId of jobIds) {
+      await sql`DELETE FROM jobsmembers WHERE job_id = ${jobId}`;
+      await sql`DELETE FROM jobs WHERE job_id = ${jobId}`;
+    }
     await sql`DELETE FROM projectsadmins WHERE project_id = ${id}`;
     await sql`DELETE FROM projectsmembers WHERE project_id = ${id}`;
     await sql`DELETE FROM projects WHERE project_id = ${id}`;
@@ -220,12 +223,10 @@ export async function createJob(prevState: JobState, formData: FormData) {
   }
  
   const { projectId, jobName, jobMemberIds, status, deadline, jobDescription, resultUrl } = validatedFields.data;
-  const dl = new Date(deadline).toISOString().split('T')[0];
- 
   try {
     const result: QueryResult<QueryResultRow> = await sql`
     INSERT INTO jobs (project_id, job_name, creator_id, status, deadline, description, result_url)
-    VALUES (${projectId}, ${jobName}, ${currentUserId}, ${status}, ${dl}, ${jobDescription}, ${resultUrl})
+    VALUES (${projectId}, ${jobName}, ${currentUserId}, ${status}, ${deadline}, ${jobDescription}, ${resultUrl})
     RETURNING job_id;
   `;
   
@@ -248,4 +249,54 @@ export async function createJob(prevState: JobState, formData: FormData) {
  
   revalidatePath(`/dashboard/${projectId}/edit`);
   redirect(`/dashboard/${projectId}/edit`);
+}
+
+const UpdateJob = JobFormSchema.omit({ jobId: true });
+
+export async function updateJob(id: string, formData: FormData) {
+  const { projectId, jobName, jobMemberIds, status, deadline, jobDescription, resultUrl } = UpdateJob.parse({
+    projectId: formData.get('projectId'),
+    jobName: formData.get('jobName'),
+    jobMemberIds: formData.getAll('jobMemberIds') || [],
+    status: formData.get('status'),
+    deadline: formData.get('deadline'),
+    jobDescription: formData.get('jobDescription'),
+    resultUrl: formData.get('resultUrl'),
+  });
+ 
+  try {
+    await sql`
+        UPDATE jobs
+        SET job_name = ${jobName}, status = ${status}, deadline = ${deadline}, result_url = ${resultUrl}, description = ${jobDescription} 
+        WHERE job_id = ${id}
+      `;
+    
+    await sql`
+        DELETE FROM jobsmembers
+        WHERE job_id = ${id}
+      `;
+    
+    for (const jobMemberId of jobMemberIds) {
+      await sql`
+        INSERT INTO jobsmembers (user_id, project_id)
+        VALUES (${jobMemberId}, ${id});
+      `;
+    }
+  } catch (error) {
+    return { message: 'Database Error: Failed to Update Job.' };
+  }
+ 
+  revalidatePath(`/dashboard/${projectId}/edit`);
+  redirect(`/dashboard/${projectId}/edit`);
+}
+
+export async function deleteJob(id: string) {
+  try {
+    await sql`DELETE FROM jobsmembers WHERE job_id = ${id}`;
+    await sql`DELETE FROM jobs WHERE job_id = ${id}`;
+    revalidatePath('/dashboard/');
+    return { message: 'Deleted Job.' };
+  } catch (error) {
+    return { message: 'Database Error: Failed to Delete Job.' };
+  }
 }

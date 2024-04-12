@@ -83,10 +83,9 @@ export default function Form({
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                type="date"
+                type="datetime-local"
                 id="startDate"
                 name="startDate"
-                placeholder=""
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pr-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
               <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -102,7 +101,7 @@ export default function Form({
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                type="date"
+                type="datetime-local"
                 id="endDate"
                 name="endDate"
                 placeholder=""

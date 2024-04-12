@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, JobsMembersProfilesList, JobsTable } from './definitions';
+import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, JobsMembersProfilesList, JobsTable, JobForm } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 import { getServerSession, Session } from "next-auth";
 
@@ -149,6 +149,31 @@ export async function fetchMembers() {
   }
 }
 
+export async function fetchProjectsMembers(id: string) {
+  noStore();
+  try {
+    const data = await sql<MembersField>`
+      SELECT
+        user_id,
+        user_name,
+        profile_url
+      FROM accounts
+      WHERE EXISTS (
+          SELECT 1 
+          FROM projectsmembers
+          WHERE projectsmembers.user_id = accounts.user_id
+          AND projectsmembers.project_id = ${id}
+      )
+      ORDER BY user_name ASC
+    `;
+    const members = data.rows;
+    return members;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all members.');
+  }
+}
+
 export async function fetchCategories() {
   noStore();
   const session: Session | null = await getServerSession();
@@ -245,5 +270,33 @@ export async function fetchJobsMembersProfilesList(id: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch the latest members.');
+  }
+}
+
+export async function fetchJobById(id: string) {
+  noStore();
+  try {
+    const data = await sql<JobForm>`
+      SELECT
+        jobs.job_id,
+        jobs.project_id,
+        jobs.job_name,
+        jobs.description,
+        jobs.status,
+        jobs.deadline,
+        jobs.result_url
+      FROM jobs
+      WHERE jobs.job_id = ${id};
+    `;
+
+    const job = data.rows.map((job) => ({
+      ...job,
+    }));
+
+    console.log(job);
+    return job[0];
+  } catch (error: any) {
+    console.error('Database Error:', error);
+    throw new Error(`Failed to fetch job: ${(error as Error).message}`);
   }
 }

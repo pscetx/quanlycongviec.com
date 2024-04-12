@@ -1,5 +1,5 @@
 import { lusitana } from "@/app/ui/fonts";
-import { formatDateToLocal } from "@/app/lib/utils";
+import { formatDateToLocalNoHour } from "@/app/lib/utils";
 import { fetchSearchedProjects } from "@/app/lib/data";
 import MembersProfilesList from "./member-list";
 import { UpdateProject, DeleteProject } from "./buttons";
@@ -47,9 +47,12 @@ export default async function ProjectsTable({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p>
-                      Ngày bắt đầu : {formatDateToLocal(project.start_date)}
+                      Ngày bắt đầu :{" "}
+                      {formatDateToLocalNoHour(project.start_date)}
                     </p>
-                    <p>Ngày kết thúc: {formatDateToLocal(project.end_date)}</p>
+                    <p>
+                      Ngày kết thúc: {formatDateToLocalNoHour(project.end_date)}
+                    </p>
                   </div>
                   <UpdateProject id={project.project_id} />
                   <div className="flex justify-end gap-2"></div>
@@ -78,13 +81,13 @@ export default async function ProjectsTable({
                     <div>
                       {"Ngày bắt đầu:"}
                       <span className="italic pl-2">
-                        {formatDateToLocal(project.start_date)}
+                        {formatDateToLocalNoHour(project.start_date)}
                       </span>
                     </div>
                     <div>
                       {"Ngày kết thúc:"}
                       <span className="italic pl-2">
-                        {formatDateToLocal(project.end_date)}
+                        {formatDateToLocalNoHour(project.end_date)}
                       </span>
                     </div>
                   </div>

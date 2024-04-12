@@ -1,6 +1,6 @@
 import Form from "@/app/ui/jobs/create-form";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import { fetchMembers, fetchProjectById } from "@/app/lib/data";
+import { fetchProjectsMembers, fetchProjectById } from "@/app/lib/data";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export default async function Page({
   const project_id = params.project_id;
   const project = await fetchProjectById(project_id);
   const project_name = project.project_name;
-  const members = await fetchMembers();
+  const members = await fetchProjectsMembers(project_id);
   return (
     <main>
       <Breadcrumbs

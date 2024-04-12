@@ -23,6 +23,15 @@ export default function EditProjectForm({
   categories: string[];
 }) {
   const updateProjectWithId = updateProject.bind(null, project.project_id);
+  const startDate = project.start_date ? new Date(project.start_date) : null;
+  const endDate = project.end_date ? new Date(project.end_date) : null;
+  const gmtPlus7Offset = 7 * 60 * 60 * 1000;
+  const adjustedStartDate = startDate
+    ? new Date(startDate.getTime() + gmtPlus7Offset)
+    : null;
+  const adjustedEndDate = endDate
+    ? new Date(endDate.getTime() + gmtPlus7Offset)
+    : null;
 
   return (
     <form action={updateProjectWithId}>
@@ -88,7 +97,9 @@ export default function EditProjectForm({
                 id="startDate"
                 name="startDate"
                 defaultValue={
-                  project.start_date ? adjustToICT(project.start_date) : ""
+                  adjustedStartDate
+                    ? adjustedStartDate.toISOString().slice(0, 16)
+                    : ""
                 }
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pr-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
@@ -109,7 +120,9 @@ export default function EditProjectForm({
                 id="endDate"
                 name="endDate"
                 defaultValue={
-                  project.end_date ? adjustToICT(project.end_date) : ""
+                  adjustedEndDate
+                    ? adjustedEndDate.toISOString().slice(0, 16)
+                    : ""
                 }
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pr-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
@@ -190,20 +203,4 @@ export default function EditProjectForm({
       </div>
     </form>
   );
-}
-
-function adjustToICT(dateString: string) {
-  const date = new Date(dateString);
-  const offset = 7 * 60 * 60 * 1000;
-  const utcTimestamp = date.getTime() + date.getTimezoneOffset() * 60 * 1000;
-  const ictTimestamp = utcTimestamp + offset;
-  const ictDate = new Date(ictTimestamp);
-
-  const year = ictDate.getFullYear();
-  const month = String(ictDate.getMonth() + 1).padStart(2, "0");
-  const day = String(ictDate.getDate()).padStart(2, "0");
-  const hours = String(ictDate.getHours()).padStart(2, "0");
-  const minutes = String(ictDate.getMinutes()).padStart(2, "0");
-
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
 }

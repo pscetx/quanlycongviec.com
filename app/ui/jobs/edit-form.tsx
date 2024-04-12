@@ -1,46 +1,49 @@
-import { lusitana } from "@/app/ui/fonts";
-import { MembersField, ProjectForm } from "@/app/lib/definitions";
+import { MembersField, JobForm } from "@/app/lib/definitions";
 import {
   ClipboardDocumentListIcon,
   TagIcon,
   ClockIcon,
   CalendarIcon,
   BookOpenIcon,
+  MinusCircleIcon,
+  CheckIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
-import { updateProject } from "@/app/lib/actions";
-import JobsTable from "@/app/ui/jobs/list-of-jobs";
-import CreateJob from "../jobs/buttons";
+import { updateJob } from "@/app/lib/actions";
 
 export default function EditProjectForm({
-  project,
+  job,
   members,
-  categories,
 }: {
-  project: ProjectForm;
+  job: JobForm;
   members: MembersField[];
-  categories: string[];
 }) {
-  const updateProjectWithId = updateProject.bind(null, project.project_id);
+  const updateJobWithId = updateJob.bind(null, job.job_id);
+  const dl = job.deadline ? new Date(job.deadline) : null;
+  const gmtPlus7Offset = 7 * 60 * 60 * 1000;
+  const adjustedDeadline = dl ? new Date(dl.getTime() + gmtPlus7Offset) : null;
 
   return (
-    <form action={updateProjectWithId}>
+    <form action={updateJobWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/*Project's Name*/}
+        <input
+          type="hidden"
+          id="projectId"
+          name="projectId"
+          value={job.project_id}
+        />
+        {/*Job's Name*/}
         <div className="mb-4">
-          <label
-            htmlFor="projectName"
-            className="mb-2 block text-sm font-medium"
-          >
-            Nhập tên dự án
+          <label htmlFor="jobName" className="mb-2 block text-sm font-medium">
+            Tên công việc
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                id="projectName"
-                name="projectName"
-                defaultValue={project.project_name}
+                id="jobName"
+                name="jobName"
+                defaultValue={job.job_name}
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 required
               />
@@ -49,46 +52,81 @@ export default function EditProjectForm({
           </div>
         </div>
 
-        {/*Category*/}
-        <div className="mb-4">
-          <label htmlFor="category" className="mb-2 block text-sm font-medium">
-            Chọn phân loại dự án
-          </label>
-          <div className="relative">
-            <select
-              id="category"
-              name="category"
-              className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-9 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue={project.category}
-              aria-describedby="category-error"
-            >
-              <option value="" disabled>
-                Chọn phân loại
-              </option>
-              {categories.map((category, index) => (
-                <option key={index} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-
-            <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+        {/* Job Status */}
+        <fieldset>
+          <legend className="mb-2 block text-sm font-medium">
+            Chọn trạng thái
+          </legend>
+          <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3 mb-3">
+            <div className="flex gap-4">
+              <div className="flex items-center">
+                <input
+                  id="Chưa làm"
+                  name="status"
+                  type="radio"
+                  value="Chưa làm"
+                  defaultChecked={job.status === "Chưa làm"}
+                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                />
+                <label
+                  htmlFor="Chưa làm"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-red-500 text-white px-3 py-1.5 text-xs font-medium"
+                >
+                  Chưa làm <MinusCircleIcon className="h-4 w-4" />
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="Đang làm"
+                  name="status"
+                  type="radio"
+                  value="Đang làm"
+                  defaultChecked={job.status === "Đang làm"}
+                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                />
+                <label
+                  htmlFor="Đang làm"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-yellow-300 text-black px-3 py-1.5 text-xs font-medium"
+                >
+                  Đang làm <ClockIcon className="h-4 w-4" />
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="Đã làm"
+                  name="status"
+                  type="radio"
+                  value="Đã làm"
+                  defaultChecked={job.status === "Đã làm"}
+                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                />
+                <label
+                  htmlFor="Đã làm"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 text-white px-3 py-1.5 text-xs font-medium"
+                >
+                  Đã làm <CheckIcon className="h-4 w-4" />
+                </label>
+              </div>
+            </div>
           </div>
-        </div>
+        </fieldset>
 
-        {/*Start Date Input*/}
+        {/*Deadline Input */}
         <div className="mb-4">
-          <label htmlFor="startDate" className="mb-2 block text-sm font-medium">
-            Chọn ngày dự án bắt đầu
+          <label htmlFor="deadline" className="mb-2 block text-sm font-medium">
+            Chọn hạn hoàn thành
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
                 type="datetime-local"
-                id="startDate"
-                name="startDate"
+                id="deadline"
+                name="deadline"
+                placeholder=""
                 defaultValue={
-                  project.start_date ? adjustToICT(project.start_date) : ""
+                  adjustedDeadline
+                    ? adjustedDeadline.toISOString().slice(0, 16)
+                    : ""
                 }
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pr-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
@@ -97,58 +135,16 @@ export default function EditProjectForm({
           </div>
         </div>
 
-        {/*End Date Input */}
-        <div className="mb-4">
-          <label htmlFor="endDate" className="mb-2 block text-sm font-medium">
-            Chọn ngày dự án kết thúc
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                type="datetime-local"
-                id="endDate"
-                name="endDate"
-                defaultValue={
-                  project.end_date ? adjustToICT(project.end_date) : ""
-                }
-                className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pr-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              />
-              <ClockIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-        </div>
-
-        {/*Description*/}
-        <div className="mb-4">
-          <label
-            htmlFor="description"
-            className="mb-2 block text-sm font-medium"
-          >
-            Nhập mô tả dự án
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <textarea
-                id="description"
-                name="description"
-                defaultValue={project.description}
-                className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-              />
-              <BookOpenIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-        </div>
-
         {/*Choose Members*/}
         <div className="mb-4">
           <label htmlFor="members" className="mb-2 block text-sm font-medium">
-            Chọn thành viên dự án
+            Chọn thành viên công việc
           </label>
           <div className="relative">
             <div className="inline-block relative w-full">
               <select
                 id="members"
-                name="memberIds"
+                name="jobMemberIds"
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-2 text-sm outline-2 placeholder:text-gray-500"
                 defaultValue=""
                 aria-describedby="members-error"
@@ -164,19 +160,51 @@ export default function EditProjectForm({
             </div>
           </div>
         </div>
-        <div className="flex flex-row justify-between">
-          <h2
-            className={`${lusitana.className} text-xl font-extrabold text-emerald-800`}
+
+        {/*Description*/}
+        <div className="mb-4">
+          <label
+            htmlFor="jobDescription"
+            className="mb-2 block text-sm font-medium"
           >
-            Danh sách công việc
-          </h2>
-          <CreateJob id={project.project_id} />
+            Nhập mô tả công việc
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <textarea
+                id="jobDescription"
+                name="jobDescription"
+                placeholder=""
+                defaultValue={job.description}
+                className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+              <BookOpenIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
         </div>
-        <JobsTable id={project.project_id} />
+
+        {/*Result URL*/}
+        <div className="mb-4">
+          <label htmlFor="resultUrl" className="mb-2 block text-sm font-medium">
+            Nhập đường dẫn kết quả
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="resultUrl"
+                name="resultUrl"
+                placeholder=""
+                defaultValue={job.result_url}
+                className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+              <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+        </div>
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/dashboard/"
+          href={`/dashboard/${job.project_id}/edit`}
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Hủy
@@ -190,20 +218,4 @@ export default function EditProjectForm({
       </div>
     </form>
   );
-}
-
-function adjustToICT(dateString: string) {
-  const date = new Date(dateString);
-  const offset = 7 * 60 * 60 * 1000;
-  const utcTimestamp = date.getTime() + date.getTimezoneOffset() * 60 * 1000;
-  const ictTimestamp = utcTimestamp + offset;
-  const ictDate = new Date(ictTimestamp);
-
-  const year = ictDate.getFullYear();
-  const month = String(ictDate.getMonth() + 1).padStart(2, "0");
-  const day = String(ictDate.getDate()).padStart(2, "0");
-  const hours = String(ictDate.getHours()).padStart(2, "0");
-  const minutes = String(ictDate.getMinutes()).padStart(2, "0");
-
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
 }

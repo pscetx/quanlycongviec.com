@@ -101,3 +101,14 @@ export type JobsMembersProfilesList = {
     job_id: string;
     profile_url: string;
 };
+
+export type JobForm = {
+    job_id: string;
+    project_id: string;
+    job_name: string;
+    description: string;
+    status: 'Chưa làm' | 'Đang làm' | 'Đã làm';
+    deadline: string;
+    result_url: string;
+    user_name: string;
+};

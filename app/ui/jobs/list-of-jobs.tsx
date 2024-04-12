@@ -3,6 +3,7 @@ import { formatDateToLocal } from "@/app/lib/utils";
 import { fetchJobs } from "@/app/lib/data";
 import MembersProfilesList from "./member-list";
 import JobStatus from "./status";
+import { DeleteJob, UpdateJob } from "./buttons";
 
 export default async function JobsTable({ id }: { id: string }) {
   const jobs = await fetchJobs(id);
@@ -26,22 +27,23 @@ export default async function JobsTable({ id }: { id: string }) {
                   <MembersProfilesList id={job.job_id} />
                 </div>
               </div>
-              <div className="flex flex-row pl-3 pr-3 justify-between items-center">
-                <div>
+              <div className="flex flex-row pl-3 pr-3 justify-between">
+                <div className="flex w-28">
                   <JobStatus status={job.status} />
                 </div>
-                <div>
+                <div className="flex w-72 pt-1">
                   {"Hạn hoàn thành:"}
                   <span className="font-bold pl-1">
                     {formatDateToLocal(job.deadline)}
                   </span>
                 </div>
-                <div>
+                <div className="flex w-52 pt-1">
                   {"Người tạo:"}
                   <span className="font-bold pl-1">{job.user_name}</span>
                 </div>
-                <div>
-                  <JobStatus status={job.status} />
+                <div className="flex flex-row">
+                  <UpdateJob id={job.job_id} />
+                  <DeleteJob id={job.job_id} />
                 </div>
               </div>
             </div>
