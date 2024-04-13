@@ -1,5 +1,3 @@
-"use client";
-
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { deleteJob } from "@/app/lib/actions";
@@ -12,7 +10,7 @@ export default async function CreateJob({ id }: { id: string }) {
       className="flex h-10 items-center bg-gradient-to-r from-emerald-400 to-green-500 px-2 rounded-md inline-block text-white text-md font-bold shadow-md hover:shadow-lg transition duration-300 ease-in-out cursor-pointer"
     >
       <span className="hidden md:block">Tạo công việc</span>{" "}
-      <PlusIcon className="h-5 md:ml-4" />
+      <PlusIcon className="h-5 md:ml-2" />
     </Link>
   );
 }

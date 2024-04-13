@@ -300,3 +300,28 @@ export async function fetchJobById(id: string) {
     throw new Error(`Failed to fetch job: ${(error as Error).message}`);
   }
 }
+
+export async function fetchJobsMembers(id: string) {
+  noStore();
+  try {
+    const data = await sql<MembersField>`
+      SELECT
+        user_id,
+        user_name,
+        profile_url
+      FROM accounts
+      WHERE EXISTS (
+          SELECT 1 
+          FROM jobsmembers
+          WHERE jobsmembers.user_id = accounts.user_id
+          AND jobsmembers.job_id = ${id}
+      )
+      ORDER BY user_name ASC
+    `;
+    const members = data.rows;
+    return members;
+  } catch (error: any) {
+    console.error('Database Error:', error);
+    throw new Error(`Failed to fetch job: ${(error as Error).message}`);
+  }
+}

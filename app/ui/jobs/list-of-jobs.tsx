@@ -8,6 +8,16 @@ import { DeleteJob, UpdateJob } from "./buttons";
 export default async function JobsTable({ id }: { id: string }) {
   const jobs = await fetchJobs(id);
 
+  if (jobs.length === 0) {
+    return (
+      <div className="mt-6 text-center">
+        <p className="text-2xl font-bold text-gray-600 mb-4">
+          CHƯA CÓ CÔNG VIỆC
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">

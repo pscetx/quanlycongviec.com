@@ -83,7 +83,7 @@ export default function Form({
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                type="datetime-local"
+                type="date"
                 id="startDate"
                 name="startDate"
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pr-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -101,7 +101,7 @@ export default function Form({
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
-                type="datetime-local"
+                type="date"
                 id="endDate"
                 name="endDate"
                 placeholder=""
@@ -109,6 +109,37 @@ export default function Form({
               />
               <ClockIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
+          </div>
+        </div>
+
+        {/*Choose Members*/}
+        <div className="mb-4">
+          <label htmlFor="members" className="mb-2 block text-sm font-medium">
+            Chọn thành viên
+          </label>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {members.map((member) => (
+              <div key={member.user_id} className="flex items-center">
+                <input
+                  id={`member-${member.user_id}`}
+                  name="memberIds"
+                  type="checkbox"
+                  value={member.user_id}
+                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                />
+                <img
+                  src={member.profile_url}
+                  alt={`Profile Image of ${member.user_name}`}
+                  className="w-5 h-5 rounded-full ml-2"
+                />
+                <label
+                  htmlFor={`member-${member.user_id}`}
+                  className="ml-2 text-sm text-gray-700"
+                >
+                  {member.user_name}
+                </label>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -129,32 +160,6 @@ export default function Form({
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
               <BookOpenIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-        </div>
-
-        {/*Choose Members*/}
-        <div className="mb-4">
-          <label htmlFor="members" className="mb-2 block text-sm font-medium">
-            Chọn thành viên dự án
-          </label>
-          <div className="relative">
-            <div className="inline-block relative w-full">
-              <select
-                id="members"
-                name="memberIds"
-                className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-2 text-sm outline-2 placeholder:text-gray-500"
-                defaultValue=""
-                aria-describedby="members-error"
-                multiple
-              >
-                {members.map((member) => (
-                  <option key={member.user_id} value={member.user_id}>
-                    {member.user_name}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"></div>
             </div>
           </div>
         </div>

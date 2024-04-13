@@ -278,7 +278,7 @@ export async function updateJob(id: string, formData: FormData) {
     
     for (const jobMemberId of jobMemberIds) {
       await sql`
-        INSERT INTO jobsmembers (user_id, project_id)
+        INSERT INTO jobsmembers (user_id, job_id)
         VALUES (${jobMemberId}, ${id});
       `;
     }
