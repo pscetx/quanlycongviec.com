@@ -53,7 +53,7 @@ export default async function JobsTable({ id }: { id: string }) {
                 </div>
                 <div className="flex flex-row">
                   <UpdateJob id={job.job_id} />
-                  <DeleteJob id={job.job_id} />
+                  <DeleteJob id={job.job_id} project_id={job.project_id} />
                 </div>
               </div>
             </div>

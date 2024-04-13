@@ -290,11 +290,11 @@ export async function updateJob(id: string, formData: FormData) {
   redirect(`/dashboard/${projectId}/edit`);
 }
 
-export async function deleteJob(id: string) {
+export async function deleteJob(id: string, project_id: string) {
   try {
     await sql`DELETE FROM jobsmembers WHERE job_id = ${id}`;
     await sql`DELETE FROM jobs WHERE job_id = ${id}`;
-    revalidatePath('/dashboard/');
+    revalidatePath(`/dashboard/${project_id}/edit`);
     return { message: 'Deleted Job.' };
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Job.' };
