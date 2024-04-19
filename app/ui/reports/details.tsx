@@ -1,4 +1,3 @@
-import { lusitana } from "@/app/ui/fonts";
 import { MembersField, ProjectForm } from "@/app/lib/definitions";
 import JobsTable from "@/app/ui/jobs/list-of-jobs";
 import PdfDownloadButton from "./create-pdf";
@@ -7,7 +6,7 @@ import Image from "next/image";
 import logo from "@/public/quanlycongviec.com.svg";
 import Time from "./timestamp";
 
-export default function EditProjectForm({
+export default function ReportForm({
   project,
   members,
 }: {
@@ -38,34 +37,26 @@ export default function EditProjectForm({
             <Time />
           </div>
         </div>
-        {/*Project's Name*/}
         <div className="flex flex-row mb-8 justify-center text-4xl font-bold uppercase items-center">
           báo cáo: {project.project_name}
         </div>
-
-        {/*Category*/}
-        <div className="mb-2">Phân loại dự án: {project.category}</div>
-
-        {/*Start Date Input*/}
-        <div className="mb-2">
+        <div>Phân loại dự án: {project.category}</div>
+        <div>
           Ngày bắt đầu:{" "}
           {adjustedStartDate
             ? adjustedStartDate.toISOString().split("T")[0]
             : ""}
         </div>
-
-        {/*End Date Input */}
-        <div className="mb-2">
+        <div>
           Ngày kết thúc:{" "}
           {adjustedEndDate ? adjustedEndDate.toISOString().split("T")[0] : ""}
         </div>
-
-        {/*Choose Members*/}
+        <div className="font-semibold text-lgs my-2">DANH SÁCH THÀNH VIÊN</div>
         <div className="mb-4">
           {members.map((member) => (
-            <div key={member.user_id} className="flex items-center">
+            <div key={member.user_id} className="flex items-center mb-2">
               <Image
-                className="rounded-full w-6 hidden md:inline-block"
+                className="rounded-full w-8 inline-block mr-2 justify-center"
                 src={member.profile_url}
                 width={200}
                 height={200}
@@ -76,17 +67,9 @@ export default function EditProjectForm({
             </div>
           ))}
         </div>
-
-        {/*Description*/}
+        <div className="font-semibold text-lgs mb-2">MÔ TẢ</div>
         <div className="mb-4">{project.description}</div>
-
-        <div className="flex flex-row justify-between mt-6 items-center">
-          <h2
-            className={`${lusitana.className} text-xl ml-2 font-extrabold text-emerald-800`}
-          >
-            Danh sách công việc
-          </h2>
-        </div>
+        <div className="font-semibold text-lgs mb-2">DANH SÁCH CÔNG VIỆC</div>
         <JobsTable id={project.project_id} />
       </div>
 
