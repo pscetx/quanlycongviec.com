@@ -40,12 +40,11 @@ export async function fetchSearchedProjects(
       accounts.user_name
     FROM projects
     JOIN accounts ON projects.creator_id = accounts.user_id
-    WHERE
-    (
+    WHERE (
       projects.project_name ILIKE ${`%${query}%`} OR
       projects.category ILIKE ${`%${query}%`} OR
-      projects.start_date::text ILIKE ${`%${query}%`} OR
-      projects.end_date::text ILIKE ${`%${query}%`}
+      accounts.user_name::text ILIKE ${`%${query}%`} OR
+      (${query} BETWEEN projects.start_date::text AND projects.end_date::text)
     )
     AND (
       EXISTS (
@@ -64,9 +63,9 @@ export async function fetchSearchedProjects(
     `;
 
     return projects.rows;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch projects.');
+    throw new Error(`Failed to fetch projects: ${(error as Error).message}`);
   }
 }
 
@@ -80,23 +79,24 @@ export async function fetchProjectsPages(query: string) {
     SELECT COUNT(*)
     FROM projects
       JOIN accounts ON projects.creator_id = accounts.user_id
-      WHERE
-        (projects.project_name ILIKE ${`%${query}%`} OR
-        projects.category ILIKE ${`%${query}%`} OR
-        projects.start_date::text ILIKE ${`%${query}%`} OR
-        projects.end_date::text ILIKE ${`%${query}%`})
-        AND (
-          EXISTS (
-            SELECT 1
-            FROM projectsmembers
-            WHERE projectsmembers.user_id = ${currentUserId} AND projectsmembers.project_id = projects.project_id
-          )
-          OR EXISTS (
-            SELECT 1
-            FROM projectsadmins
-            WHERE projectsadmins.user_id = ${currentUserId} AND projectsadmins.project_id = projects.project_id
-          )
+      WHERE (
+        projects.project_name ILIKE ${`%${query}%`} OR
+      projects.category ILIKE ${`%${query}%`} OR
+      accounts.user_name::text ILIKE ${`%${query}%`} OR
+      (${query} BETWEEN projects.start_date::text AND projects.end_date::text)
+      )
+      AND (
+        EXISTS (
+          SELECT 1
+          FROM projectsmembers
+          WHERE projectsmembers.user_id = ${currentUserId} AND projectsmembers.project_id = projects.project_id
         )
+        OR EXISTS (
+          SELECT 1
+          FROM projectsadmins
+          WHERE projectsadmins.user_id = ${currentUserId} AND projectsadmins.project_id = projects.project_id
+        )
+      )
     `;
 
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
@@ -232,10 +232,13 @@ export async function fetchProjectById(id: string) {
         projects.start_date,
         projects.end_date,
         projects.description,
-        categories.category
+        categories.category,
+        accounts.user_name
       FROM projects
       JOIN 
         categories ON categories.user_id = ${currentUserId}
+      JOIN
+        accounts ON projects.creator_id = accounts.user_id
       WHERE projects.project_id = ${id};
     `;
 

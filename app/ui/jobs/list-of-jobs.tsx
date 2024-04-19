@@ -3,7 +3,8 @@ import { formatDateToLocal } from "@/app/lib/utils";
 import { fetchJobs } from "@/app/lib/data";
 import MembersProfilesList from "./member-list";
 import JobStatus from "./status";
-import { DeleteJob, UpdateJob } from "./buttons";
+import { UpdateJob } from "./buttons";
+import { DeleteJob } from "./delete";
 
 export default async function JobsTable({ id }: { id: string }) {
   const jobs = await fetchJobs(id);

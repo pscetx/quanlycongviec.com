@@ -33,7 +33,7 @@ export default async function Page({
         </h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Tìm dự án theo tên, phân loại, ngày.." />
+        <Search placeholder="Nhập tên, ngày (YYYY-MM-DD), phân loại.." />
         <CreateProject />
       </div>
       {
