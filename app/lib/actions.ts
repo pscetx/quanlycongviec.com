@@ -384,3 +384,22 @@ export async function deleteCategory(id: string, formData: FormData) {
     return { message: 'Database Error: Failed to Delete Category.' };
   }
 }
+
+export async function updateProfile() {
+  try {
+    const session = await getServerSession();
+    const currentUserId = await getCurrentUserId(session);
+
+    await sql`
+      UPDATE accounts
+      SET
+        profile_url = ${'/users/' + currentUserId + '.png'}
+      WHERE user_id = ${currentUserId}
+    `;
+    revalidatePath(`/dashboard/account`);
+    redirect(`/dashboard/account`);
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    return { message: 'Đổi thông tin không thành công.' };
+  }
+}

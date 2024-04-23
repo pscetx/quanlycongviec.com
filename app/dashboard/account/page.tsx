@@ -10,6 +10,7 @@ import {
 import EditUserForm from "@/app/ui/account/edit-form";
 import EditPasswordForm from "@/app/ui/account/pass-change";
 import EditCategoriesForm from "@/app/ui/account/categories-edit";
+import { UploadPic } from "@/app/ui/account/profile-edit";
 import { revalidatePath } from "next/cache";
 
 export const metadata: Metadata = {
@@ -30,6 +31,7 @@ export default async function Page() {
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
         Tài khoản
       </h1>
+      <UploadPic />
       <EditCategoriesForm acc={acc} categories={categories} />
       <EditPasswordForm acc={acc} />
       <EditUserForm acc={acc} />
