@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 import { QueryResult, QueryResultRow } from '@vercel/postgres';
 import { getServerSession, Session } from "next-auth";
 import { getCurrentUserId } from "@/app/lib/data";
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 
 const FormSchema = z.object({
   id: z.string(),
@@ -320,6 +320,67 @@ export async function updateUser(id: string, formData: FormData) {
     revalidatePath(`/dashboard/account`);
     redirect(`/dashboard/account`);
   } catch (error) {
-    return { message: 'Database Error: Failed to Update Job.' };
+    return { message: 'Đổi thông tin thành công.' };
+  }
+}
+
+export async function updatePassword(id: string, formData: FormData) {
+  const oldpassword = formData.get('oldpassword') as string;
+  const newpassword = formData.get('newpassword') as string;
+  const newpassword2 = formData.get('newpassword2') as string;
+
+  if (newpassword !== newpassword2) {
+    return { message: 'Mật khẩu mới nhập lại không khớp.' };
+  }
+  try {
+    const result = await sql`
+      SELECT password
+      FROM accounts
+      WHERE user_id = ${id}
+    `;
+    if (result.rowCount === 0) {
+      return { message: 'Không tìm thấy người dùng' };
+    }
+    const hashedPassword = result.rows[0].password;
+    const passwordMatch = await compare(oldpassword, hashedPassword);
+    if (!passwordMatch) {
+      return { message: 'Mật khẩu cũ sai.' };
+    }
+    const hashedNewPassword = await hash(newpassword, 10);
+    await sql`
+      UPDATE accounts
+      SET password = ${hashedNewPassword}
+      WHERE user_id = ${id}
+    `;
+    revalidatePath(`/dashboard/account`);
+    redirect(`/dashboard/account`);
+  } catch (error) {
+    return { message: 'Đổi mật khẩu thành công.' };
+  }
+}
+
+export async function addCategory(id: string, formData: FormData) {
+  const category = formData.get('category') as string;
+  try {
+    await sql`
+      INSERT INTO categories VALUES (${id}, ${category});
+    `;
+
+    revalidatePath(`/dashboard/account`);
+    redirect(`/dashboard/account`);
+  } catch (error) {
+    return { message: 'Database Error: Failed to Add Category.' };
+  }
+}
+
+export async function deleteCategory(id: string, formData: FormData) {
+  const category = formData.get('category') as string;
+  try {
+    await sql`DELETE FROM categories WHERE category = ${category} AND user_id = ${id}`;
+
+    revalidatePath(`/dashboard/account`);
+    redirect(`/dashboard/account`);
+  } catch (error) {
+    return { message: 'Database Error: Failed to Delete Category.' };
   }
 }

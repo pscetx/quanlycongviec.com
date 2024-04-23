@@ -52,6 +52,14 @@ export default function Form({
         <div className="mb-4">
           <label htmlFor="category" className="mb-2 block text-sm font-medium">
             Chọn phân loại dự án
+            <Link
+              className="hover:text-emerald-700 transition duration-300 ease-in-out"
+              href="/dashboard/account"
+            >
+              {" "}
+              (thêm phân loại mới tại đây)
+            </Link>
+            .
           </label>
           <div className="relative">
             <select
