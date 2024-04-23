@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, JobsMembersProfilesList, JobsTable, JobForm } from './definitions';
+import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, JobsMembersProfilesList, JobsTable, JobForm, Accounts } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 import { getServerSession, Session } from "next-auth";
 
@@ -18,6 +18,34 @@ export async function getCurrentUserId(session: Session | null): Promise<string>
     throw new Error('User ID not found');
   }
   return currentUserId;
+}
+
+export async function fetchUserById(id: string) {
+  noStore();
+  try {
+    const data = await sql<Accounts>`
+      SELECT
+        accounts.user_id,
+        accounts.user_name,
+        accounts.email,
+        accounts.password,
+        accounts.date_of_birth,
+        accounts.phone,
+        accounts.profile_url
+      FROM accounts
+      WHERE accounts.user_id = ${id};
+    `;
+
+    const acc = data.rows.map((acc) => ({
+      ...acc,
+    }));
+
+    console.log(acc);
+    return acc[0];
+  } catch (error: any) {
+    console.error('Database Error:', error);
+    throw new Error(`Failed to fetch account: ${(error as Error).message}`);
+  }
 }
 
 export async function fetchSearchedProjects(
@@ -126,26 +154,39 @@ export async function fetchMembersProfilesList(id: string) {
   }
 }
 
-export async function fetchMembers() {
+export async function fetchProjectById(id: string) {
   noStore();
   const session: Session | null = await getServerSession();
   const currentUserId = await getCurrentUserId(session);
 
   try {
-    const data = await sql<MembersField>`
+    const data = await sql<ProjectForm>`
       SELECT
-        user_id,
-        user_name,
-        profile_url
-      FROM accounts
-      WHERE user_id != ${currentUserId}
-      ORDER BY user_name ASC
+        projects.project_id,
+        projects.project_name,
+        projects.category,
+        projects.start_date,
+        projects.end_date,
+        projects.description,
+        categories.category,
+        accounts.user_name
+      FROM projects
+      JOIN 
+        categories ON categories.user_id = ${currentUserId}
+      JOIN
+        accounts ON projects.creator_id = accounts.user_id
+      WHERE projects.project_id = ${id};
     `;
-    const members = data.rows;
-    return members;
-  } catch (err) {
-    console.error('Database Error:', err);
-    throw new Error('Failed to fetch all members.');
+
+    const project = data.rows.map((project) => ({
+      ...project,
+    }));
+
+    console.log(project);
+    return project[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch project.');
   }
 }
 
@@ -199,8 +240,11 @@ export async function fetchProjectsAdmins(id: string) {
   }
 }
 
-export async function fetchJobsMembers(id: string) {
+export async function fetchMembers() {
   noStore();
+  const session: Session | null = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+
   try {
     const data = await sql<MembersField>`
       SELECT
@@ -208,18 +252,14 @@ export async function fetchJobsMembers(id: string) {
         user_name,
         profile_url
       FROM accounts
-      WHERE EXISTS (
-          SELECT 1 
-          FROM jobsmembers
-          WHERE jobsmembers.user_id = accounts.user_id
-          AND jobsmembers.job_id = ${id}
-      )
+      WHERE user_id != ${currentUserId}
       ORDER BY user_name ASC
     `;
-    return data.rows;
-  } catch (error: any) {
-    console.error('Database Error:', error);
-    throw new Error(`Failed to fetch job: ${(error as Error).message}`);
+    const members = data.rows;
+    return members;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all members.');
   }
 }
 
@@ -240,42 +280,6 @@ export async function fetchCategories() {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch all categories.');
-  }
-}
-
-export async function fetchProjectById(id: string) {
-  noStore();
-  const session: Session | null = await getServerSession();
-  const currentUserId = await getCurrentUserId(session);
-
-  try {
-    const data = await sql<ProjectForm>`
-      SELECT
-        projects.project_id,
-        projects.project_name,
-        projects.category,
-        projects.start_date,
-        projects.end_date,
-        projects.description,
-        categories.category,
-        accounts.user_name
-      FROM projects
-      JOIN 
-        categories ON categories.user_id = ${currentUserId}
-      JOIN
-        accounts ON projects.creator_id = accounts.user_id
-      WHERE projects.project_id = ${id};
-    `;
-
-    const project = data.rows.map((project) => ({
-      ...project,
-    }));
-
-    console.log(project);
-    return project[0];
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch project.');
   }
 }
 
@@ -347,6 +351,30 @@ export async function fetchJobById(id: string) {
 
     console.log(job);
     return job[0];
+  } catch (error: any) {
+    console.error('Database Error:', error);
+    throw new Error(`Failed to fetch job: ${(error as Error).message}`);
+  }
+}
+
+export async function fetchJobsMembers(id: string) {
+  noStore();
+  try {
+    const data = await sql<MembersField>`
+      SELECT
+        user_id,
+        user_name,
+        profile_url
+      FROM accounts
+      WHERE EXISTS (
+          SELECT 1 
+          FROM jobsmembers
+          WHERE jobsmembers.user_id = accounts.user_id
+          AND jobsmembers.job_id = ${id}
+      )
+      ORDER BY user_name ASC
+    `;
+    return data.rows;
   } catch (error: any) {
     console.error('Database Error:', error);
     throw new Error(`Failed to fetch job: ${(error as Error).message}`);

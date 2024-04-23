@@ -10,7 +10,7 @@ export default function LogOut() {
         signOut();
       }}
     >
-      <button className="flex h-[48px] grow items-center justify-center gap-2 rounded-md text-white bg-yellow-600 p-3 text-sm font-medium hover:bg-red-600 transition duration-300 ease-in-out md:flex-none md:justify-start md:p-2 md:px-3">
+      <button className="flex h-10 grow items-center justify-center gap-2 rounded-md text-white bg-yellow-600 p-3 text-sm font-medium hover:bg-red-600 transition duration-300 ease-in-out md:flex-none md:justify-start md:p-2 md:px-3">
         <PowerIcon className="w-6" />
         <div className="hidden md:block">Đăng xuất</div>
       </button>

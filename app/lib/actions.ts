@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { QueryResult, QueryResultRow } from '@vercel/postgres';
 import { getServerSession, Session } from "next-auth";
 import { getCurrentUserId } from "@/app/lib/data";
+import { hash } from 'bcrypt';
 
 const FormSchema = z.object({
   id: z.string(),
@@ -298,5 +299,27 @@ export async function deleteJob(id: string, project_id: string) {
     return { message: 'Deleted Job.' };
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Job.' };
+  }
+}
+
+export async function updateUser(id: string, formData: FormData) {
+  const user_name = formData.get('user_name') as string;
+  const date_of_birth = formData.get('date_of_birth') as string;
+  const phone = formData.get('phone') as string;
+
+  try {
+    await sql`
+      UPDATE accounts
+      SET
+        user_name = ${user_name},
+        date_of_birth = ${date_of_birth},
+        phone = ${phone}
+      WHERE user_id = ${id}
+    `;
+
+    revalidatePath(`/dashboard/account`);
+    redirect(`/dashboard/account`);
+  } catch (error) {
+    return { message: 'Database Error: Failed to Update Job.' };
   }
 }

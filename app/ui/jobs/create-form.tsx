@@ -198,14 +198,14 @@ export default function Form({
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href={`/dashboard/${id}/edit`}
-          className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+          className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 hover:bg-gray-200 transition duration-300 ease-in-out"
         >
           Hủy
         </Link>
 
         <Button
           type="submit"
-          className="bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700"
+          className="bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition duration-300 ease-in-out"
         >
           Tạo mới công việc
         </Button>

@@ -12,6 +12,7 @@ import { useState } from "react";
 import { lusitana } from "@/app/ui/fonts";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
+import Link from "next/link";
 
 export default function Form() {
   const router = useRouter();
@@ -53,7 +54,15 @@ export default function Form() {
     <form onSubmit={handleSubmit} className="space-y-3">
       <div className="flex-1">
         <h1 className={`${lusitana.className} mb-3 text-gray-900 text-xl`}>
-          Đăng ký với email.
+          Đã có tài khoản?
+          <Link
+            className="hover:text-sky-700 transition duration-300 ease-in-out"
+            href="/"
+          >
+            {" "}
+            Đăng nhập tại đây
+          </Link>
+          .
         </h1>
         <div className="w-full">
           <label
