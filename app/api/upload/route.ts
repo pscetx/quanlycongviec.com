@@ -17,11 +17,9 @@ export async function POST(request: NextRequest) {
   const bytes = await file.arrayBuffer()
   const buffer = Buffer.from(bytes)
 
-  // Define the correct path where you want to save the uploaded file
-  const path = `./public/users/${currentUserId}.png` // Example: Save in the 'public/uploads' directory
+  const path = `./public/users/${currentUserId}.png`
 
   try {
-    // Write the file to the filesystem
     await writeFile(path, buffer)
     console.log(`File saved at: ${path}`)
     return NextResponse.json({ success: true, path: path })
