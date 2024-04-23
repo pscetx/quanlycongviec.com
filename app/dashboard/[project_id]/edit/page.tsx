@@ -4,6 +4,7 @@ import {
   fetchCategories,
   fetchMembers,
   fetchProjectById,
+  isUserProjectAdmin,
 } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
@@ -18,12 +19,13 @@ export default async function Page({
   params: { project_id: string };
 }) {
   const project_id = params.project_id;
+  const isAdmin = await isUserProjectAdmin(project_id);
   const [project, members, categories] = await Promise.all([
     fetchProjectById(project_id),
     fetchMembers(),
     fetchCategories(),
   ]);
-  if (!project) {
+  if (!project || !isAdmin) {
     notFound();
   }
   const project_name = project.project_name;

@@ -111,7 +111,7 @@ export async function fetchMembersProfilesList(id: string) {
   noStore();
   try {
     const data = await sql<MembersProfilesList>`
-      SELECT DISTINCT accounts.profile_url
+      SELECT DISTINCT accounts.profile_url, accounts.user_name, accounts.user_id
       FROM accounts
       JOIN projectsmembers ON projectsmembers.user_id = accounts.user_id
       WHERE projectsmembers.project_id = ${id}`;
@@ -163,6 +163,31 @@ export async function fetchProjectsMembers(id: string) {
           FROM projectsmembers
           WHERE projectsmembers.user_id = accounts.user_id
           AND projectsmembers.project_id = ${id}
+      )
+      ORDER BY user_name ASC
+    `;
+    const members = data.rows;
+    return members;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all members.');
+  }
+}
+
+export async function fetchProjectsAdmins(id: string) {
+  noStore();
+  try {
+    const data = await sql<MembersField>`
+      SELECT
+        user_id,
+        user_name,
+        profile_url
+      FROM accounts
+      WHERE EXISTS (
+          SELECT 1 
+          FROM projectsadmins
+          WHERE projectsadmins.user_id = accounts.user_id
+          AND projectsadmins.project_id = ${id}
       )
       ORDER BY user_name ASC
     `;
@@ -325,5 +350,25 @@ export async function fetchJobById(id: string) {
   } catch (error: any) {
     console.error('Database Error:', error);
     throw new Error(`Failed to fetch job: ${(error as Error).message}`);
+  }
+}
+
+export async function isUserProjectAdmin(projectId: string): Promise<boolean> {
+  noStore();
+  const session: Session | null = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+
+  try {
+    const data = await sql<MembersField>`
+      SELECT 1
+      FROM projectsadmins
+      WHERE projectsadmins.user_id = ${currentUserId}
+      AND projectsadmins.project_id = ${projectId}
+      LIMIT 1
+    `;
+    return data.rows.length > 0;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to check if user is project admin.');
   }
 }
