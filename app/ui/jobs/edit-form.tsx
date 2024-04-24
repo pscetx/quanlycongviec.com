@@ -30,6 +30,12 @@ export default function EditProjectForm({
     <main>
       <div className="rounded-md bg-gray-50 p-4 mb-6 md:p-6">
         <form action={addMem}>
+          <input
+            type="hidden"
+            id="projectId"
+            name="projectId"
+            defaultValue={job.project_id}
+          />
           <div className="mb-4">
             <label
               htmlFor="memberEmail"

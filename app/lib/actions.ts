@@ -454,16 +454,27 @@ export async function deleteAdmin(id: string, formData: FormData) {
 
 export async function addJobsMember(id: string, formData: FormData) {
   const memberEmail = formData.get('memberEmail') as string;
+  const projectId = formData.get('projectId') as string;
   try {
     const result: QueryResult = await sql`
-      SELECT user_id FROM accounts WHERE email = ${memberEmail};
+    SELECT user_id FROM accounts WHERE email = ${memberEmail};
     `;
-    
-    const userId = result.rows[0].user_id;
 
-    await sql`
-      INSERT INTO jobsmembers (job_id, user_id) VALUES (${id}, ${userId});
-    `;
+    if (result.rowCount === 0) {
+      return { message: 'User does not exist.' };
+    } else {
+        const userId = result.rows[0].user_id;
+        const projectMemberResult: QueryResult = await sql`
+          SELECT 1 FROM projectsmembers WHERE user_id = ${userId} AND project_id = ${projectId};
+          `;
+        if (projectMemberResult.rowCount === 0) {
+          return { message: 'User is not a member of the project.' };
+        } else {
+            await sql`
+              INSERT INTO jobsmembers (job_id, user_id) VALUES (${id}, ${userId});
+              `;
+        }
+    }
 
     revalidatePath(`/dashboard/${id}/edit`);
     redirect(`/dashboard/${id}/edit`);
