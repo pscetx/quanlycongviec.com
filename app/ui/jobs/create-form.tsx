@@ -143,13 +143,14 @@ export default function Form({
                 <img
                   src={member.profile_url}
                   alt={`Profile Image of ${member.user_name}`}
-                  className="w-5 h-5 rounded-full ml-2"
+                  className="w-8 h-8 rounded-full ml-2"
                 />
                 <label
                   htmlFor={`member-${member.user_id}`}
-                  className="ml-2 text-sm text-gray-700"
+                  className="ml-2 text-gray-700"
                 >
-                  {member.user_name}
+                  <div className="text-sm">{member.user_name}</div>
+                  <div className="italic text-xs">{member.email}</div>
                 </label>
               </div>
             ))}
