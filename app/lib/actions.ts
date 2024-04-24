@@ -239,8 +239,7 @@ export async function createJob(prevState: JobState, formData: FormData) {
 const UpdateJob = JobFormSchema.omit({ jobId: true });
 
 export async function updateJob(id: string, formData: FormData) {
-  const { projectId, jobName, status, deadline, jobDescription, resultUrl } = UpdateJob.parse({
-    projectId: formData.get('projectId'),
+  const { jobName, status, deadline, jobDescription, resultUrl } = UpdateJob.parse({
     jobName: formData.get('jobName'),
     status: formData.get('status'),
     deadline: formData.get('deadline'),

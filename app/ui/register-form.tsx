@@ -43,10 +43,16 @@ export default function Form() {
     });
 
     if (!response.ok) {
-      setErrorMessage("Đăng ký không thành công.");
+      const responseData = await response.json();
+      setErrorMessage(responseData.message || "Đăng ký không thành công.");
     } else {
-      router.push("/");
-      router.refresh();
+      const responseData = await response.json();
+      if (responseData.message === "already exists") {
+        setErrorMessage("Email vừa nhập đã tồn tại tài khoản.");
+      } else {
+        router.push("/");
+        router.refresh();
+      }
     }
     setIsSubmitting(false);
   };
