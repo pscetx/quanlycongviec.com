@@ -377,7 +377,7 @@ export default function EditProjectForm({
         </div>
       </form>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        <div className="flex flex-row justify-between mt-6 items-center">
+        <div className="flex flex-row justify-between mt-2 items-center">
           <h2
             className={`${lusitana.className} text-xl ml-2 font-extrabold text-emerald-800`}
           >
