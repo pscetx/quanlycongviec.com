@@ -105,17 +105,13 @@ export async function createProject(prevState: State, formData: FormData) {
 const UpdateProject = FormSchema.omit({ id: true });
 
 export async function updateProject(id: string, formData: FormData) {
-  const { projectName, memberIds, startDate, endDate, category, description } = UpdateProject.parse({
+  const { projectName, startDate, endDate, category, description } = UpdateProject.parse({
     projectName: formData.get('projectName'),
-    memberIds: formData.getAll('memberIds') || [],
     startDate: formData.get('startDate'),
     endDate: formData.get('endDate'),
     category: formData.get('category'),
     description: formData.get('description'),
   });
-
-  const session: Session | null = await getServerSession();
-  const currentUserId = await getCurrentUserId(session);
  
   try {
     await sql`
@@ -123,19 +119,7 @@ export async function updateProject(id: string, formData: FormData) {
         SET project_name = ${projectName}, start_date = ${startDate}, end_date = ${endDate}, category = ${category}, description = ${description} 
         WHERE project_id = ${id}
       `;
-    
-    await sql`
-        DELETE FROM projectsmembers
-        WHERE project_id = ${id}
-        AND user_id != ${currentUserId}
-      `;
-    
-    for (const memberId of memberIds) {
-      await sql`
-        INSERT INTO projectsmembers (user_id, project_id)
-        VALUES (${memberId}, ${id});
-      `;
-    }
+
   } catch (error) {
     return { message: 'Database Error: Failed to Update Project.' };
   }
@@ -255,10 +239,9 @@ export async function createJob(prevState: JobState, formData: FormData) {
 const UpdateJob = JobFormSchema.omit({ jobId: true });
 
 export async function updateJob(id: string, formData: FormData) {
-  const { projectId, jobName, jobMemberIds, status, deadline, jobDescription, resultUrl } = UpdateJob.parse({
+  const { projectId, jobName, status, deadline, jobDescription, resultUrl } = UpdateJob.parse({
     projectId: formData.get('projectId'),
     jobName: formData.get('jobName'),
-    jobMemberIds: formData.getAll('jobMemberIds') || [],
     status: formData.get('status'),
     deadline: formData.get('deadline'),
     jobDescription: formData.get('jobDescription'),
@@ -271,24 +254,13 @@ export async function updateJob(id: string, formData: FormData) {
         SET job_name = ${jobName}, status = ${status}, deadline = ${deadline}, result_url = ${resultUrl}, description = ${jobDescription} 
         WHERE job_id = ${id}
       `;
-    
-    await sql`
-        DELETE FROM jobsmembers
-        WHERE job_id = ${id}
-      `;
-    
-    for (const jobMemberId of jobMemberIds) {
-      await sql`
-        INSERT INTO jobsmembers (user_id, job_id)
-        VALUES (${jobMemberId}, ${id});
-      `;
-    }
+
   } catch (error) {
     return { message: 'Database Error: Failed to Update Job.' };
   }
  
-  revalidatePath(`/dashboard/${projectId}/edit`);
-  redirect(`/dashboard/${projectId}/edit`);
+  revalidatePath(`/dashboard/${id}/edit`);
+  redirect(`/dashboard/${id}/edit`);
 }
 
 export async function deleteJob(id: string, project_id: string) {
@@ -401,5 +373,119 @@ export async function updateProfile() {
   } catch (error) {
     console.error('Error updating profile:', error);
     return { message: 'Đổi thông tin không thành công.' };
+  }
+}
+
+export async function addMember(id: string, formData: FormData) {
+  const memberEmail = formData.get('memberEmail') as string;
+  try {
+    const result: QueryResult = await sql`
+      SELECT user_id FROM accounts WHERE email = ${memberEmail};
+    `;
+    
+    const userId = result.rows[0].user_id;
+
+    await sql`
+      INSERT INTO projectsmembers (project_id, user_id) VALUES (${id}, ${userId});
+    `;
+
+    revalidatePath(`/dashboard/${id}/edit`);
+    redirect(`/dashboard/${id}/edit`);
+  } catch (error) {
+    return { message: 'Database Error: Failed to Add Member.' };
+  }
+}
+
+export async function deleteMember(id: string, formData: FormData) {
+  const memberId = formData.get('memberId') as string;
+  const session = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+  try {
+    if (memberId !== currentUserId) {
+      await sql`DELETE FROM projectsmembers WHERE user_id = ${memberId} AND project_id = ${id}`;
+    } else {
+      return { message: 'You cannot delete yourself from the project.' };
+    }
+
+    revalidatePath(`/dashboard/${id}/edit`);
+    redirect(`/dashboard/${id}/edit`);
+  } catch (error) {
+    return { message: 'Database Error: Failed to Delete Member.' };
+  }
+}
+
+export async function addAdmin(id: string, formData: FormData) {
+  const adminEmail = formData.get('adminEmail') as string;
+  try {
+    const result: QueryResult = await sql`
+      SELECT user_id FROM accounts WHERE email = ${adminEmail};
+    `;
+    
+    const userId = result.rows[0].user_id;
+
+    await sql`
+      INSERT INTO projectsadmins (project_id, user_id) VALUES (${id}, ${userId});
+    `;
+
+    revalidatePath(`/dashboard/${id}/edit`);
+    redirect(`/dashboard/${id}/edit`);
+  } catch (error) {
+    return { message: 'Database Error: Failed to Add Admin.' };
+  }
+}
+
+export async function deleteAdmin(id: string, formData: FormData) {
+  const adminId = formData.get('adminId') as string;
+  const session = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+  try {
+    if (adminId !== currentUserId) {
+      await sql`DELETE FROM projectsadmins WHERE user_id = ${adminId} AND project_id = ${id}`;
+    } else {
+      return { message: 'You cannot delete yourself from the project.' };
+    }
+
+    revalidatePath(`/dashboard/${id}/edit`);
+    redirect(`/dashboard/${id}/edit`);
+  } catch (error) {
+    return { message: 'Database Error: Failed to Delete Admin.' };
+  }
+}
+
+export async function addJobsMember(id: string, formData: FormData) {
+  const memberEmail = formData.get('memberEmail') as string;
+  try {
+    const result: QueryResult = await sql`
+      SELECT user_id FROM accounts WHERE email = ${memberEmail};
+    `;
+    
+    const userId = result.rows[0].user_id;
+
+    await sql`
+      INSERT INTO jobsmembers (job_id, user_id) VALUES (${id}, ${userId});
+    `;
+
+    revalidatePath(`/dashboard/${id}/edit`);
+    redirect(`/dashboard/${id}/edit`);
+  } catch (error) {
+    return { message: 'Database Error: Failed to Add Member.' };
+  }
+}
+
+export async function deleteJobsMember(id: string, formData: FormData) {
+  const memberId = formData.get('memberId') as string;
+  const session = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+  try {
+    if (memberId !== currentUserId) {
+      await sql`DELETE FROM jobsmembers WHERE user_id = ${memberId} AND job_id = ${id}`;
+    } else {
+      return { message: 'You cannot delete yourself from the job.' };
+    }
+
+    revalidatePath(`/dashboard/${id}/edit`);
+    redirect(`/dashboard/${id}/edit`);
+  } catch (error) {
+    return { message: 'Database Error: Failed to Delete Member.' };
   }
 }

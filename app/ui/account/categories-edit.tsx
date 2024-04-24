@@ -27,7 +27,7 @@ export default function EditCategoriesForm({
               <input
                 id="category"
                 name="category"
-                placeholder=""
+                placeholder="Nhập tên phân loại mới"
                 className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 required
               />

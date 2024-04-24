@@ -75,6 +75,7 @@ export type MembersField = {
     user_id: string;
     user_name: string;
     profile_url: string;
+    email: string;
 };
 
 export type ProjectForm = {

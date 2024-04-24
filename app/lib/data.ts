@@ -139,7 +139,7 @@ export async function fetchMembersProfilesList(id: string) {
   noStore();
   try {
     const data = await sql<MembersProfilesList>`
-      SELECT DISTINCT accounts.profile_url, accounts.user_name, accounts.user_id
+      SELECT DISTINCT accounts.profile_url
       FROM accounts
       JOIN projectsmembers ON projectsmembers.user_id = accounts.user_id
       WHERE projectsmembers.project_id = ${id}`;
@@ -197,7 +197,8 @@ export async function fetchProjectsMembers(id: string) {
       SELECT
         user_id,
         user_name,
-        profile_url
+        profile_url,
+        email
       FROM accounts
       WHERE EXISTS (
           SELECT 1 
@@ -222,7 +223,8 @@ export async function fetchProjectsAdmins(id: string) {
       SELECT
         user_id,
         user_name,
-        profile_url
+        profile_url,
+        email
       FROM accounts
       WHERE EXISTS (
           SELECT 1 
@@ -250,7 +252,8 @@ export async function fetchMembers() {
       SELECT
         user_id,
         user_name,
-        profile_url
+        profile_url,
+        email
       FROM accounts
       WHERE user_id != ${currentUserId}
       ORDER BY user_name ASC
@@ -364,7 +367,8 @@ export async function fetchJobsMembers(id: string) {
       SELECT
         user_id,
         user_name,
-        profile_url
+        profile_url,
+        email
       FROM accounts
       WHERE EXISTS (
           SELECT 1 

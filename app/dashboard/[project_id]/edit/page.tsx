@@ -2,7 +2,8 @@ import Form from "@/app/ui/projects/edit-form";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import {
   fetchCategories,
-  fetchMembers,
+  fetchProjectsMembers,
+  fetchProjectsAdmins,
   fetchProjectById,
   isUserProjectAdmin,
 } from "@/app/lib/data";
@@ -20,9 +21,10 @@ export default async function Page({
 }) {
   const project_id = params.project_id;
   const isAdmin = await isUserProjectAdmin(project_id);
-  const [project, members, categories] = await Promise.all([
+  const [project, members, admins, categories] = await Promise.all([
     fetchProjectById(project_id),
-    fetchMembers(),
+    fetchProjectsMembers(project_id),
+    fetchProjectsAdmins(project_id),
     fetchCategories(),
   ]);
   if (!project || !isAdmin) {
@@ -42,7 +44,12 @@ export default async function Page({
           },
         ]}
       />
-      <Form project={project} members={members} categories={categories} />
+      <Form
+        project={project}
+        members={members}
+        admins={admins}
+        categories={categories}
+      />
     </main>
   );
 }

@@ -1,7 +1,7 @@
 import Form from "@/app/ui/jobs/edit-form";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import {
-  fetchProjectsMembers,
+  fetchJobsMembers,
   fetchJobById,
   fetchProjectById,
 } from "@/app/lib/data";
@@ -21,7 +21,7 @@ export default async function Page({ params }: { params: { job_id: string } }) {
 
   const project_id = job.project_id;
   const project = await fetchProjectById(project_id);
-  const members = await fetchProjectsMembers(project_id);
+  const members = await fetchJobsMembers(job_id);
   const project_name = project.project_name;
   const job_name = job.job_name;
 
