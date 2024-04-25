@@ -8,13 +8,7 @@ export default async function JobsTable({ id }: { id: string }) {
   const chua = await fetchJobPercentage(id, "Chưa làm");
 
   if (jobs.length === 0) {
-    return (
-      <div className="mt-6 text-center">
-        <p className="text-2xl font-bold text-gray-600 mb-4">
-          CHƯA CÓ CÔNG VIỆC
-        </p>
-      </div>
-    );
+    return <p className="italic mt-4">*không có công việc</p>;
   }
 
   return (

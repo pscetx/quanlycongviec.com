@@ -421,7 +421,10 @@ export async function fetchJobPercentage(id: string, status: string) {
         projects.project_name,
         COUNT(jobs.job_id) AS total_jobs,
         SUM(CASE WHEN jobs.status = ${status} THEN 1 ELSE 0 END) AS total_specified_jobs,
-        ROUND((SUM(CASE WHEN jobs.status = ${status} THEN 1 ELSE 0 END) * 100.0 / COUNT(jobs.job_id)), 1) AS percent_completed
+        CASE 
+          WHEN COUNT(jobs.job_id) = 0 THEN 0 -- Set percent_completed to 0 if total_jobs is 0
+          ELSE ROUND((SUM(CASE WHEN jobs.status = ${status} THEN 1 ELSE 0 END) * 100.0 / COUNT(jobs.job_id)), 1)
+        END AS percent_completed
       FROM 
         projects
       LEFT JOIN 

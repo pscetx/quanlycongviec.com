@@ -5,8 +5,6 @@ npm i @vercel/postgres
 npm i autoprefixer
 npm i bcrypt
 npm i --save-dev @types/bcrypt
-npm i bcryptjs
-npm i --save-dev @types/bcryptjs
 npm i clsx
 npm i dotenv
 npm i next-auth
