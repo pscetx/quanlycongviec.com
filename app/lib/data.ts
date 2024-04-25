@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, JobsMembersProfilesList, JobsTable, JobForm, Accounts } from './definitions';
+import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, JobsMembersProfilesList, JobsTable, JobForm, Accounts, JobPercentage } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 import { getServerSession, Session } from "next-auth";
 
@@ -15,7 +15,7 @@ export async function getCurrentUserId(session: Session | null): Promise<string>
   `;
   const currentUserId = userResult.rows[0]?.user_id;
   if (!currentUserId) {
-    throw new Error('User ID not found');
+    throw new Error('User Id not found');
   }
   return currentUserId;
 }
@@ -150,7 +150,7 @@ export async function fetchMembersProfilesList(id: string) {
     return profilesList;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch the latest members.');
+    throw new Error('Failed to fetch members.');
   }
 }
 
@@ -168,8 +168,10 @@ export async function fetchProjectById(id: string) {
         projects.start_date,
         projects.end_date,
         projects.description,
+        projects.creator_id,
         categories.category,
-        accounts.user_name
+        accounts.user_name,
+        accounts.email
       FROM projects
       JOIN 
         categories ON categories.user_id = ${currentUserId}
@@ -194,25 +196,30 @@ export async function fetchProjectsMembers(id: string) {
   noStore();
   try {
     const data = await sql<MembersField>`
-      SELECT
-        user_id,
-        user_name,
-        profile_url,
-        email
-      FROM accounts
-      WHERE EXISTS (
-          SELECT 1 
-          FROM projectsmembers
-          WHERE projectsmembers.user_id = accounts.user_id
-          AND projectsmembers.project_id = ${id}
-      )
-      ORDER BY user_name ASC
+    SELECT
+      accounts.user_id,
+      accounts.user_name,
+      accounts.profile_url,
+      accounts.email,
+      COUNT(jobsmembers.job_id) AS job_count
+    FROM 
+      accounts
+    LEFT JOIN 
+      jobsmembers ON accounts.user_id = jobsmembers.user_id
+    LEFT JOIN 
+      projectsmembers ON accounts.user_id = projectsmembers.user_id
+    WHERE 
+      projectsmembers.project_id = ${id}
+    GROUP BY 
+      accounts.user_id, accounts.user_name, accounts.profile_url, accounts.email
+    ORDER BY 
+      accounts.user_name ASC;
     `;
     const members = data.rows;
     return members;
-  } catch (err) {
-    console.error('Database Error:', err);
-    throw new Error('Failed to fetch all members.');
+  } catch (error: any) {
+    console.error('Database Error:', error);
+    throw new Error(`Failed to fetch members: ${(error as Error).message}`);
   }
 }
 
@@ -238,7 +245,7 @@ export async function fetchProjectsAdmins(id: string) {
     return members;
   } catch (err) {
     console.error('Database Error:', err);
-    throw new Error('Failed to fetch all members.');
+    throw new Error('Failed to fetch members.');
   }
 }
 
@@ -328,7 +335,7 @@ export async function fetchJobsMembersProfilesList(id: string) {
     return profilesList;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch the latest members.');
+    throw new Error('Failed to fetch members.');
   }
 }
 
@@ -381,7 +388,7 @@ export async function fetchJobsMembers(id: string) {
     return data.rows;
   } catch (error: any) {
     console.error('Database Error:', error);
-    throw new Error(`Failed to fetch job: ${(error as Error).message}`);
+    throw new Error(`Failed to fetch members: ${(error as Error).message}`);
   }
 }
 
@@ -402,5 +409,36 @@ export async function isUserProjectAdmin(projectId: string): Promise<boolean> {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to check if user is project admin.');
+  }
+}
+
+export async function fetchJobPercentage(id: string, status: string) {
+  noStore();
+  try {
+    const data = await sql<JobPercentage>`
+      SELECT
+        projects.project_id,
+        projects.project_name,
+        COUNT(jobs.job_id) AS total_jobs,
+        SUM(CASE WHEN jobs.status = ${status} THEN 1 ELSE 0 END) AS total_specified_jobs,
+        ROUND((SUM(CASE WHEN jobs.status = ${status} THEN 1 ELSE 0 END) * 100.0 / COUNT(jobs.job_id)), 1) AS percent_completed
+      FROM 
+        projects
+      LEFT JOIN 
+        jobs ON projects.project_id = jobs.project_id
+      WHERE 
+        projects.project_id = ${id}
+      GROUP BY 
+        projects.project_id, projects.project_name;
+    `;
+
+    const job = data.rows.map((job) => ({
+      ...job,
+    }));
+
+    return job[0];
+  } catch (error: any) {
+    console.error('Database Error:', error);
+    throw new Error(`Failed to fetch job percentage: ${(error as Error).message}`);
   }
 }

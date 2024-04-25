@@ -13,42 +13,6 @@ export type Categories = {
     category: string;
 };
 
-export type Projects = {
-    project_id: string;
-    project_name: string;
-    creator_id: string;
-    start_date: string;
-    end_date: string;
-    category: string;
-    description: string;
-};
-
-export type ProjectsAdmins = {
-    user_id: string;
-    project_id: string;
-};
-
-export type ProjectsMembers = {
-    user_id: string;
-    project_id: string;
-};
-
-export type Jobs = {
-    job_id: string;
-    project_id: string;
-    job_name: string;
-    creator_id: string;
-    description: string;
-    status: 'Chưa làm' | 'Đang làm' | 'Đã làm';
-    deadline: string;
-    result_url: string;
-};
-
-export type JobsMembers = {
-    user_id: string;
-    job_id: string;
-};
-
 export type Reports = {
     report_id: string;
     project_id: string;
@@ -76,6 +40,7 @@ export type MembersField = {
     user_name: string;
     profile_url: string;
     email: string;
+    job_count: string;
 };
 
 export type ProjectForm = {
@@ -84,7 +49,9 @@ export type ProjectForm = {
     start_date: string;
     end_date: string;
     category: string;
+    creator_id: string;
     user_name: string;
+    email: string;
     description: string;
 };
 
@@ -96,6 +63,8 @@ export type JobsTable = {
     user_name: string;
     status: 'Chưa làm' | 'Đang làm' | 'Đã làm';
     deadline: string;
+    description: string;
+    result_url: string;
 };
 
 export type JobsMembersProfilesList = {
@@ -112,4 +81,13 @@ export type JobForm = {
     deadline: string;
     result_url: string;
     user_name: string;
+};
+
+export type JobPercentage = {
+    project_id: string;
+    project_name: string;
+    total_jobs: string;
+    total_specified_jobs: string;
+    status: 'Chưa làm' | 'Đang làm' | 'Đã làm';
+    percent_completed: string;
 };

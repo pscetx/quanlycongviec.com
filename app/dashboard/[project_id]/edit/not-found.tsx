@@ -7,7 +7,7 @@ export default function NotFound() {
     <main className="flex h-full flex-col items-center justify-center">
       <Image src="/404.png" alt="logo" width={400} height={50} priority />
       <p className="text-xl font-semibold">
-        Dự án không tồn tại hoặc bạn không có quyền truy cập :(
+        Dữ liệu không tồn tại hoặc bạn không có quyền truy cập :(
       </p>
       <Link
         href="/dashboard/"

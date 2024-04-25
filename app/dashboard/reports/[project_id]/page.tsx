@@ -1,6 +1,6 @@
 import Form from "@/app/ui/reports/details";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import { fetchMembers, fetchProjectById } from "@/app/lib/data";
+import { fetchProjectsMembers, fetchProjectById } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
@@ -16,7 +16,7 @@ export default async function Page({
   const project_id = params.project_id;
   const [project, members] = await Promise.all([
     fetchProjectById(project_id),
-    fetchMembers(),
+    fetchProjectsMembers(project_id),
   ]);
   if (!project) {
     notFound();

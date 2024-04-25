@@ -1,6 +1,6 @@
 {
   "name": "quanlycongviec.com",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,8 +14,6 @@
     "@tailwindcss/forms": "^0.5.7",
     "@vercel/postgres": "^0.7.2",
     "bcrypt": "^5.1.1",
-    "bcryptjs": "^2.4.3",
-    "canvg": "^4.0.1",
     "clsx": "^2.1.0",
     "dotenv": "^16.4.5",
     "html2canvas": "^1.4.1",

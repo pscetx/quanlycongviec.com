@@ -238,7 +238,7 @@ export async function createJob(prevState: JobState, formData: FormData) {
   redirect(`/dashboard/${projectId}/edit`);
 }
 
-const UpdateJob = JobFormSchema.omit({ jobId: true, jobMemberIds: true });
+const UpdateJob = JobFormSchema.omit({ jobId: true, projectId: true, jobMemberIds: true });
 
 export async function updateJob(id: string, formData: FormData) {
   const { jobName, status, deadline, jobDescription, resultUrl } = UpdateJob.parse({
@@ -260,8 +260,8 @@ export async function updateJob(id: string, formData: FormData) {
     return { message: 'Database Error: Failed to Update Job.' };
   }
  
-  revalidatePath(`/dashboard/${id}/edit`);
-  redirect(`/dashboard/${id}/edit`);
+  revalidatePath(`/dashboard/jobs/${id}/edit`);
+  redirect(`/dashboard/jobs/${id}/edit`);
 }
 
 export async function deleteJob(id: string, project_id: string) {
