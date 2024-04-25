@@ -48,7 +48,7 @@ export default function Form() {
     } else {
       const responseData = await response.json();
       if (responseData.message === "already exists") {
-        setErrorMessage("Email vừa nhập đã tồn tại tài khoản.");
+        setErrorMessage("Email đã tồn tại tài khoản.");
       } else {
         router.push("/");
         router.refresh();

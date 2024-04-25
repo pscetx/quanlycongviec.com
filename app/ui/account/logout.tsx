@@ -10,9 +10,9 @@ export default function LogOut() {
         signOut();
       }}
     >
-      <button className="flex h-10 grow items-center justify-center gap-2 rounded-md text-white bg-yellow-600 p-3 text-sm font-medium hover:bg-red-600 transition duration-300 ease-in-out md:flex-none md:justify-start md:p-2 md:px-3">
+      <button className="flex flex-row p-2 justify-center gap-2 rounded-md border-2 border-neutral-300 bg-yellow-600 text-white font-bold hover:bg-red-500 hover:border-red-400 transition duration-300 ease-in-out cursor-pointer">
         <PowerIcon className="w-6" />
-        <div className="hidden md:block">Đăng xuất</div>
+        <div>Đăng xuất</div>
       </button>
     </span>
   );

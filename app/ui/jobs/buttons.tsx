@@ -6,7 +6,7 @@ export default async function CreateJob({ id }: { id: string }) {
   return (
     <Link
       href={`/dashboard/${job_id}/create`}
-      className="flex h-10 items-center bg-gradient-to-r from-emerald-400 to-green-500 px-2 rounded-md inline-block text-white text-md font-bold shadow-md hover:shadow-lg transition duration-300 ease-in-out cursor-pointer"
+      className="flex h-10 items-center bg-gradient-to-r from-emerald-400 to-emerald-500 py-2 px-4 rounded-md inline-block text-white text-lg font-semibold shadow-md hover:shadow-lg transform hover:scale-105 hover:bg-gradient-to-t hover:from-emerald-500 hover:to-emerald-400 transition duration-500 ease-in-out cursor-pointer"
     >
       <span className="hidden md:block">Tạo công việc</span>{" "}
       <PlusIcon className="h-5 md:ml-2" />

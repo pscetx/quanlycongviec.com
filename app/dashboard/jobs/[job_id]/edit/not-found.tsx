@@ -1,17 +1,20 @@
 import Link from "next/link";
-import { FaceFrownIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
+import { ArrowLongLeftIcon } from "@heroicons/react/24/outline";
 
 export default function NotFound() {
   return (
-    <main className="flex h-full flex-col items-center justify-center gap-2">
-      <FaceFrownIcon className="w-10 text-gray-400" />
-      <h2 className="text-xl font-semibold">404 Not Found</h2>
-      <p>Hệ thống không tìm thấy dữ liệu.</p>
+    <main className="flex h-full flex-col items-center justify-center">
+      <Image src="/404.png" alt="logo" width={400} height={50} priority />
+      <p className="text-xl font-semibold">
+        Hệ thống không tìm thấy dữ liệu :(
+      </p>
       <Link
         href="/dashboard/"
-        className="mt-4 rounded-md bg-emerald-500 px-4 py-2 text-sm text-white transition-colors hover:bg-green-400"
+        className="font-semibold mt-6 rounded-md bg-emerald-600 px-4 py-2 text-sm text-white hover:bg-emerald-500 transition duration-300 ease-in-out"
       >
-        Quay lại
+        <ArrowLongLeftIcon />
+        QUAY LẠI
       </Link>
     </main>
   );

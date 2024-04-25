@@ -18,6 +18,7 @@ import {
 } from "@/app/lib/actions";
 import JobsTable from "@/app/ui/jobs/list-of-jobs";
 import CreateJob from "../jobs/buttons";
+import { DeleteProject } from "./buttons";
 
 export default function EditProjectForm({
   project,
@@ -386,6 +387,9 @@ export default function EditProjectForm({
           <CreateJob id={project.project_id} />
         </div>
         <JobsTable id={project.project_id} />
+      </div>
+      <div className="mt-6">
+        <DeleteProject id={project.project_id} />
       </div>
     </main>
   );

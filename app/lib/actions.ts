@@ -98,11 +98,11 @@ export async function createProject(prevState: State, formData: FormData) {
     };
   }
  
-  revalidatePath('/dashboard/');
-  redirect('/dashboard/');
+  revalidatePath('/dashboard');
+  redirect('/dashboard');
 }
 
-const UpdateProject = FormSchema.omit({ id: true });
+const UpdateProject = FormSchema.omit({ id: true, memberIds: true });
 
 export async function updateProject(id: string, formData: FormData) {
   const { projectName, startDate, endDate, category, description } = UpdateProject.parse({
@@ -124,14 +124,15 @@ export async function updateProject(id: string, formData: FormData) {
     return { message: 'Database Error: Failed to Update Project.' };
   }
  
-  revalidatePath('/dashboard/');
-  redirect('/dashboard/');
+  revalidatePath(`/dashboard/${id}/edit`);
+  redirect(`/dashboard/${id}/edit`);
 }
 
 export async function deleteProject(id: string) {
+  const result: QueryResult<QueryResultRow> = await sql`SELECT job_id FROM jobs WHERE project_id = ${id}`;
+  const jobIds: string[] = result.rows.map((row) => row.job_id);
+
   try {
-    const result: QueryResult<QueryResultRow> = await sql`SELECT job_id FROM jobs WHERE project_id = ${id}`;
-    const jobIds: string[] = result.rows.map((row) => row.job_id);
     for (const jobId of jobIds) {
       await sql`DELETE FROM jobsmembers WHERE job_id = ${jobId}`;
       await sql`DELETE FROM jobs WHERE job_id = ${jobId}`;
@@ -139,11 +140,12 @@ export async function deleteProject(id: string) {
     await sql`DELETE FROM projectsadmins WHERE project_id = ${id}`;
     await sql`DELETE FROM projectsmembers WHERE project_id = ${id}`;
     await sql`DELETE FROM projects WHERE project_id = ${id}`;
-    revalidatePath('/dashboard/');
-    return { message: 'Deleted Project.' };
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Project.' };
   }
+
+  revalidatePath('/dashboard');
+  redirect('/dashboard');
 }
 
 const JobFormSchema = z.object({
@@ -236,7 +238,7 @@ export async function createJob(prevState: JobState, formData: FormData) {
   redirect(`/dashboard/${projectId}/edit`);
 }
 
-const UpdateJob = JobFormSchema.omit({ jobId: true });
+const UpdateJob = JobFormSchema.omit({ jobId: true, jobMemberIds: true });
 
 export async function updateJob(id: string, formData: FormData) {
   const { jobName, status, deadline, jobDescription, resultUrl } = UpdateJob.parse({
