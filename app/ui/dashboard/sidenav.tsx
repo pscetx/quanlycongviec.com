@@ -9,14 +9,14 @@ import UserCard from "./user-card";
 export default async function SideNav() {
   const session = await getServerSession();
   return (
-    <div className="flex h-full flex-col px-1 py-1 md:px-1">
-      <div className="mb-1 flex h-20 bg-neutral-800 rounded-md p-4 md:h-40">
+    <div className="flex h-full flex-col p-1">
+      <div className="mb-1 flex flex-col h-20 bg-neutral-800 justify-between p-2 md:h-40">
         <div className="flex-grow items-center">
           <Image src={logo} alt="logo" width={400} height={50} priority />
         </div>
-        {/* <div className="flex items-end justify-end">
-          <BellIcon className="w-7" />
-        </div> */}
+        <div className="flex justify-end">
+          <BellIcon className="w-8" />
+        </div>
       </div>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-1">
         <NavLinks />
