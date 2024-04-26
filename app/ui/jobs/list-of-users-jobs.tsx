@@ -3,6 +3,8 @@ import { formatDateToLocal } from "@/app/lib/utils";
 import { fetchUsersJobs } from "@/app/lib/data";
 import MembersProfilesList from "./member-list";
 import JobStatus from "./status";
+import { updateResult } from "@/app/lib/actions";
+import { Button } from "../button";
 
 export default async function JobsTable({ id }: { id: string }) {
   const jobs = await fetchUsersJobs(id);
@@ -28,7 +30,7 @@ export default async function JobsTable({ id }: { id: string }) {
               >
                 {index + 1}.
               </div>
-              <div className="py-3 mb-2 hover:bg-emerald-100 transition duration-300 ease-in-out rounded-l-lg rounded-r-none w-11/12">
+              <div className="py-3 mb-3 border-t border-l hover:bg-emerald-100 transition duration-300 ease-in-out rounded-l-lg rounded-r-none w-11/12">
                 <div className="whitespace-nowrap p-3 pt-0">
                   <div className="flex items-center">
                     <div className="flex w-36">
@@ -54,6 +56,36 @@ export default async function JobsTable({ id }: { id: string }) {
                     <span className="font-bold pl-1">{job.user_name}</span>
                   </div>
                 </div>
+                <div className="px-3 pt-1">
+                  {"Mô tả: "}
+                  {job.description}
+                </div>
+                <div className="px-3 pt-1">
+                  {"Kết quả: "}
+                  <a
+                    href={job.result_url}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {job.result_url}
+                  </a>
+                </div>
+                <form
+                  className="flex flex-row mt-2 mx-3 gap-3"
+                  action={updateResult.bind(null, job.job_id)}
+                >
+                  <input
+                    name="result"
+                    placeholder="Cập nhật đường dẫn kết quả mới"
+                    className="peer block w-full pl-2 transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 text-sm outline-2 placeholder:text-gray-500"
+                    required
+                  />
+                  <Button
+                    type="submit"
+                    className="justify-center w-16 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition duration-300 ease-in-out"
+                  >
+                    Lưu
+                  </Button>
+                </form>
               </div>
             </div>
           ))}

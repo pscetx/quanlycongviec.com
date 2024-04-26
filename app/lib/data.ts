@@ -65,6 +65,7 @@ export async function fetchSearchedProjects(
       projects.start_date,
       projects.end_date,
       projects.category,
+      projects.description,
       accounts.user_name
     FROM projects
     JOIN accounts ON projects.creator_id = accounts.user_id

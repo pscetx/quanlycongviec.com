@@ -38,7 +38,7 @@ export default async function ProjectsTable({
           {projects?.map((project) => (
             <div
               key={project.project_id}
-              className="w-full rounded-lg bg-neutral-100 py-3 text-sm mb-2 last-of-type:mb-0 [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+              className="w-full rounded-lg bg-neutral-100 py-3 text-sm mb-3 last-of-type:mb-0 [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
             >
               <div className="whitespace-nowrap p-3 pt-0 pl-6">
                 <div className="flex items-center">
@@ -65,7 +65,7 @@ export default async function ProjectsTable({
                     </span>
                   </div>
                 </div>
-                <div className="flex flex-col w-full items-end">
+                <div className="flex flex-col w-full">
                   <div>
                     {"Phân loại: "}
                     <span className="font-bold">{project.category}</span>
@@ -75,6 +75,10 @@ export default async function ProjectsTable({
                     <span className="font-bold">{project.user_name}</span>
                   </div>
                 </div>
+              </div>
+              <div className="pl-6 pr-3 pt-1">
+                {"Mô tả: "}
+                {project.description}
               </div>
               <JobsTable id={project.project_id} />
             </div>

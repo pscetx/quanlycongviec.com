@@ -501,3 +501,20 @@ export async function deleteJobsMember(id: string, formData: FormData) {
     return { message: 'Database Error: Failed to Delete Member.' };
   }
 }
+
+export async function updateResult(id: string, formData: FormData) {
+  const result = formData.get('result') as string;
+  try {
+    await sql`
+      UPDATE jobs
+      SET
+        result_url = ${result}
+      WHERE job_id = ${id}
+    `;
+    revalidatePath(`/dashboard/jobs`);
+    redirect(`/dashboard/jobs`);
+  } catch (error) {
+    console.error('Error updating:', error);
+    return { message: 'Đổi thông tin không thành công.' };
+  }
+}

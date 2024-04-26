@@ -28,6 +28,7 @@ export type ProjectsTable = {
     end_date: string;
     category: string;
     user_name: string;
+    description: string;
 };
 
 export type MembersProfilesList = {

@@ -18,10 +18,10 @@ export default async function MembersProfilesList({ id }: { id: string }) {
                 height={30}
               />
               <div className="absolute top-0 left-0 z-10 opacity-0 hover:opacity-100 transition duration-300 ease-in-out w-full h-full">
-                <p className="absolute bottom-4 right-5 rounded-sm bg-neutral-600 text-white p-1">
+                <div className="absolute bottom-4 right-5 rounded-sm bg-neutral-600 text-white p-1">
                   {project.user_name}
                   <div className="text-xs italic">{project.email}</div>
-                </p>
+                </div>
               </div>
             </div>
           ))}
