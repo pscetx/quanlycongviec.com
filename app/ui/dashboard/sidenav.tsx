@@ -10,7 +10,7 @@ export default async function SideNav() {
   const session = await getServerSession();
   return (
     <div className="flex h-full flex-col p-1">
-      <div className="mb-1 flex flex-col h-20 bg-neutral-800 justify-between p-2 md:h-40">
+      <div className="mb-1 flex flex-col h-20 bg-neutral-800 rounded-md justify-between p-2 md:h-40">
         <div className="flex-grow items-center">
           <Image src={logo} alt="logo" width={400} height={50} priority />
         </div>

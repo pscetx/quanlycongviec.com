@@ -508,7 +508,8 @@ export async function updateResult(id: string, formData: FormData) {
     await sql`
       UPDATE jobs
       SET
-        result_url = ${result}
+        result_url = ${result},
+        status = 'Đang làm'
       WHERE job_id = ${id}
     `;
     revalidatePath(`/dashboard/jobs`);
@@ -516,5 +517,18 @@ export async function updateResult(id: string, formData: FormData) {
   } catch (error) {
     console.error('Error updating:', error);
     return { message: 'Đổi thông tin không thành công.' };
+  }
+}
+
+export async function addNoti(id: string, type: string) {
+  const session: Session | null = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+  try {
+    await sql`
+      INSERT INTO notifications (noti_id, user_id_to, user_id_from, type ,is_read) VALUES (${id}, ${type});
+    `;
+  } catch (error) {
+    console.error('Error updating:', error);
+    return { message: 'Database Error: Failed to Add Notification.' };
   }
 }

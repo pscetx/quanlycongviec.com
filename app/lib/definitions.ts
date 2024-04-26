@@ -90,3 +90,12 @@ export type JobPercentage = {
     status: 'Chưa làm' | 'Đang làm' | 'Đã làm';
     percent_completed: string;
 };
+
+export type Notifications = {
+    noti_id: string;
+    user_id_to: string;
+    user_id_from: string;
+    type: string;
+	is_read: boolean;
+    created_at: string;
+};

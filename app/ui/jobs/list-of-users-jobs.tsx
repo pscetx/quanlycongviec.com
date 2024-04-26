@@ -5,6 +5,7 @@ import MembersProfilesList from "./member-list";
 import JobStatus from "./status";
 import { updateResult } from "@/app/lib/actions";
 import { Button } from "../button";
+import StatusCheck from "./status-check";
 
 export default async function JobsTable({ id }: { id: string }) {
   const jobs = await fetchUsersJobs(id);
@@ -30,20 +31,24 @@ export default async function JobsTable({ id }: { id: string }) {
               >
                 {index + 1}.
               </div>
-              <div className="py-3 mb-3 border-t border-l hover:bg-emerald-100 transition duration-300 ease-in-out rounded-l-lg rounded-r-none w-11/12">
-                <div className="whitespace-nowrap p-3 pt-0">
-                  <div className="flex items-center">
-                    <div className="flex w-36">
-                      <JobStatus status={job.status} />
-                    </div>
-                    <p
-                      className={`${lusitana.className} text-lg font-extrabold text-emerald-800`}
-                    >
-                      {job.job_name}
-                    </p>
-                    <MembersProfilesList id={job.job_id} />
+              <div className="py-3 mb-2 border-t border-l hover:bg-emerald-100 transition duration-300 ease-in-out rounded-l-lg rounded-r-none w-11/12">
+                <div className="flex items-center whitespace-nowrap p-3 pt-0">
+                  <p
+                    className={`${lusitana.className} text-lg font-extrabold text-emerald-800`}
+                  >
+                    {job.job_name}
+                  </p>
+                  <div className="ml-3">
+                    <JobStatus status={job.status} />
                   </div>
+                  <MembersProfilesList id={job.job_id} />
                 </div>
+                <StatusCheck
+                  status={job.status}
+                  result_url={job.result_url}
+                  deadline={job.deadline}
+                  id={job.job_id}
+                />
                 <div className="flex flex-row px-3 justify-between">
                   <div>
                     {"Hạn hoàn thành:"}
@@ -63,7 +68,7 @@ export default async function JobsTable({ id }: { id: string }) {
                 <div className="px-3 pt-1">
                   {"Kết quả: "}
                   <a
-                    href={job.result_url}
+                    href={job.result_url ?? undefined}
                     className="text-blue-600 hover:underline"
                   >
                     {job.result_url}
