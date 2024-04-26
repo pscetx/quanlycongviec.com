@@ -52,7 +52,7 @@ export default async function ProjectsTable({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p>
-                      Ngày bắt đầu :{" "}
+                      Ngày bắt đầu:{" "}
                       {formatDateToLocalNoHour(project.start_date)}
                     </p>
                     <p>
@@ -84,25 +84,25 @@ export default async function ProjectsTable({
                 <div className="flex flex-row pl-3 pr-3 items-end justify-between justify-items-center">
                   <div className="flex flex-col w-full">
                     <div>
-                      {"Ngày bắt đầu:"}
-                      <span className="italic pl-2">
+                      {"Ngày bắt đầu: "}
+                      <span className="italic pl-1">
                         {formatDateToLocalNoHour(project.start_date)}
                       </span>
                     </div>
                     <div>
                       {"Ngày kết thúc:"}
-                      <span className="italic pl-2">
+                      <span className="italic pl-1">
                         {formatDateToLocalNoHour(project.end_date)}
                       </span>
                     </div>
                   </div>
                   <div className="flex w-full">
                     {"Phân loại:"}
-                    <span className="font-bold pl-2">{project.category}</span>
+                    <span className="font-bold pl-1">{project.category}</span>
                   </div>
                   <div className="flex w-full">
                     {"Người tạo:"}
-                    <span className="font-bold pl-2">{project.user_name}</span>
+                    <span className="font-bold pl-1">{project.user_name}</span>
                   </div>
                   <UpdateProject id={project.project_id} />
                 </div>

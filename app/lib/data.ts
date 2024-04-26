@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, JobsMembersProfilesList, JobsTable, JobForm, Accounts, JobPercentage } from './definitions';
+import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, JobsTable, JobForm, Accounts, JobPercentage } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 import { getServerSession, Session } from "next-auth";
 
@@ -139,7 +139,7 @@ export async function fetchMembersProfilesList(id: string) {
   noStore();
   try {
     const data = await sql<MembersProfilesList>`
-      SELECT DISTINCT accounts.profile_url
+      SELECT DISTINCT accounts.profile_url, accounts.email, accounts.user_name
       FROM accounts
       JOIN projectsmembers ON projectsmembers.user_id = accounts.user_id
       WHERE projectsmembers.project_id = ${id}`;
@@ -323,8 +323,8 @@ export async function fetchJobs(id: string) {
 export async function fetchJobsMembersProfilesList(id: string) {
   noStore();
   try {
-    const data = await sql<JobsMembersProfilesList>`
-      SELECT DISTINCT accounts.profile_url
+    const data = await sql<MembersProfilesList>`
+      SELECT DISTINCT accounts.profile_url, accounts.email, accounts.user_name
       FROM accounts
       JOIN jobsmembers ON jobsmembers.user_id = accounts.user_id
       WHERE jobsmembers.job_id = ${id}`;
@@ -443,5 +443,46 @@ export async function fetchJobPercentage(id: string, status: string) {
   } catch (error: any) {
     console.error('Database Error:', error);
     throw new Error(`Failed to fetch job percentage: ${(error as Error).message}`);
+  }
+}
+
+export async function fetchUsersJobs(id: string) {
+  noStore();
+  const session: Session | null = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+
+  try {
+    const data = await sql<JobsTable>`
+      SELECT
+        jobs.job_id,
+        jobs.project_id,
+        jobs.job_name,
+        jobs.creator_id,
+        jobs.description,
+        jobs.status,
+        jobs.deadline,
+        jobs.result_url,
+        accounts.user_name
+      FROM jobs
+      JOIN accounts ON jobs.creator_id = accounts.user_id
+      WHERE jobs.project_id = ${id}
+      AND EXISTS (
+        SELECT 1
+        FROM projectsmembers
+        WHERE projectsmembers.user_id = ${currentUserId}
+        AND projectsmembers.project_id = jobs.project_id
+      )
+      AND EXISTS (
+        SELECT 1
+        FROM jobsmembers
+        WHERE jobsmembers.user_id = ${currentUserId}
+        AND jobsmembers.job_id = jobs.job_id
+      )
+      ORDER BY jobs.deadline ASC;
+    `;
+    return data.rows;
+  } catch (error: any) {
+    console.error('Database Error:', error);
+    throw new Error(`Failed to fetch jobs: ${(error as Error).message}`);
   }
 }

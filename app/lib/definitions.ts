@@ -32,7 +32,10 @@ export type ProjectsTable = {
 
 export type MembersProfilesList = {
     project_id: string;
+    job_id: string;
     profile_url: string;
+    email: string;
+    user_name: string;
 };
 
 export type MembersField = {
@@ -65,11 +68,6 @@ export type JobsTable = {
     deadline: string;
     description: string;
     result_url: string;
-};
-
-export type JobsMembersProfilesList = {
-    job_id: string;
-    profile_url: string;
 };
 
 export type JobForm = {
