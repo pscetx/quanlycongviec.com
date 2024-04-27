@@ -525,7 +525,10 @@ export async function addNoti(id: string, type: string) {
   const currentUserId = await getCurrentUserId(session);
   try {
     await sql`
-      INSERT INTO notifications (noti_id, user_id_to, user_id_from, type ,is_read) VALUES (${id}, ${type});
+      INSERT INTO notifications (user_id_to, type)
+        SELECT user_id, ${type}
+        FROM jobsmembers
+        WHERE job_id = ${id};
     `;
   } catch (error) {
     console.error('Error updating:', error);

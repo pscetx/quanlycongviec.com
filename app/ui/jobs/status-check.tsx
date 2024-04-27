@@ -31,14 +31,14 @@ export default function StatusCheck({
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
         setTimeLeft(
-          `${days} NGÀY ${hours} GIỜ ${minutes} PHÚT ${seconds} GIÂY.`
+          `QUÁ HẠN HOÀN THÀNH SAU ${days} NGÀY ${hours} GIỜ ${minutes} PHÚT ${seconds} GIÂY.`
         );
 
         if (diff <= 48 * 60 * 60 * 1000) {
-          addNoti(id, "1");
+          // addNoti(id, "1");
         }
       } else {
-        setTimeLeft("Expired");
+        setTimeLeft("ĐÃ QUÁ HẠN HOÀN THÀNH.");
         clearInterval(interval);
       }
     }, 1000);
@@ -61,7 +61,6 @@ export default function StatusCheck({
   } else if (status !== "Đã làm" && result_url === "") {
     return (
       <div className="pl-3 text-xs font-bold italic text-red-600">
-        QUÁ HẠN HOÀN THÀNH SAU
         {timeLeft && ` ${timeLeft}`}
       </div>
     );
