@@ -547,7 +547,7 @@ export async function updateResult(id: string, formData: FormData) {
 export async function addJobNotification(id: string, type: string) {
   try {
     const existingRow = await sql`
-      ELECT * FROM jobsnotifications 
+      SELECT * FROM jobsnotifications 
       WHERE job_id = ${id} AND type = ${type}
       FOR UPDATE
     `;
