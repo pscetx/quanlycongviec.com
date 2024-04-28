@@ -29,10 +29,9 @@ export default function StatusCheck({
           (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
         );
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
         setTimeLeft(
-          `QUÁ HẠN HOÀN THÀNH SAU ${days} NGÀY ${hours} GIỜ ${minutes} PHÚT ${seconds} GIÂY.`
+          `QUÁ HẠN HOÀN THÀNH SAU ${days} NGÀY ${hours} GIỜ ${minutes} PHÚT.`
         );
         clearInterval(interval);
 
@@ -48,10 +47,9 @@ export default function StatusCheck({
         const elapsedMinutes = Math.floor(
           (elapsed % (1000 * 60 * 60)) / (1000 * 60)
         );
-        const elapsedSeconds = Math.floor((elapsed % (1000 * 60)) / 1000);
 
         setElapsedTime(
-          `ĐÃ QUÁ HẠN HOÀN THÀNH ${elapsedDays} NGÀY ${elapsedHours} GIỜ ${elapsedMinutes} PHÚT ${elapsedSeconds} GIÂY.`
+          `ĐÃ QUÁ HẠN HOÀN THÀNH ${elapsedDays} NGÀY ${elapsedHours} GIỜ ${elapsedMinutes} PHÚT.`
         );
         clearInterval(interval);
         if (status !== "Đã làm") {
@@ -65,19 +63,19 @@ export default function StatusCheck({
 
   if (status === "Đã làm") {
     return (
-      <div className="pl-3 text-xs font-bold italic text-green-600">
+      <div className="pl-3 mb-1 text-xs font-bold italic text-green-600">
         CÔNG VIỆC ĐÃ HOÀN THÀNH!
       </div>
     );
   } else if (status !== "Đã làm" && result_url !== "") {
     return (
-      <div className="pl-3 text-xs font-bold italic text-yellow-600">
+      <div className="pl-3 mb-1 text-xs font-bold italic text-yellow-600">
         ĐANG CHỜ ADMIN CẬP NHẬT TRẠNG THÁI..
       </div>
     );
   } else if (status !== "Đã làm" && result_url === "") {
     return (
-      <div className="pl-3 text-xs font-bold italic text-red-600">
+      <div className="pl-3 mb-1 text-xs font-bold italic text-red-600">
         {timeLeft && ` ${timeLeft}`}
         {elapsedTime && ` ${elapsedTime}`}
       </div>

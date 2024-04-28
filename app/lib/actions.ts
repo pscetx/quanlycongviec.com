@@ -546,11 +546,11 @@ export async function updateResult(id: string, formData: FormData) {
 
 export async function addJobNotification(id: string, type: string) {
   try {
-      const existingRow = await sql`
-        SELECT * FROM jobsnotifications 
-        WHERE job_id = ${id} AND type = ${type}
-        FOR UPDATE
-      `;
+    const existingRow = await sql`
+      ELECT * FROM jobsnotifications 
+      WHERE job_id = ${id} AND type = ${type}
+      FOR UPDATE
+    `;
 
     if (existingRow.rowCount === 0) {
       if (type === '3') {
@@ -576,5 +576,28 @@ export async function addJobNotification(id: string, type: string) {
   } catch (error) {
     console.error('Error adding:', error);
     return { message: 'Database Error: Failed to Add Notification.' };
+  }
+}
+
+export async function updateIsRead(id: string, type: string, formData: FormData){
+  try {
+    await sql`
+      UPDATE jobsnotifications
+      SET
+        is_read = TRUE
+      WHERE job_id = ${id} AND type = ${type}
+    `;
+
+  } catch (error) {
+    console.error('Error updating:', error);
+    return { message: 'Đổi thông tin không thành công.' };
+  }
+
+  if (type == '3') {
+    revalidatePath(`/dashboard/jobs/${id}/edit`);
+    redirect(`/dashboard/jobs/${id}/edit`);
+  } else {
+    revalidatePath(`/dashboard/jobs/${id}`);
+    redirect(`/dashboard/jobs/${id}`);
   }
 }

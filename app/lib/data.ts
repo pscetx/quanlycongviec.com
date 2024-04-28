@@ -351,9 +351,11 @@ export async function fetchJobById(id: string) {
         jobs.description,
         jobs.status,
         jobs.deadline,
-        jobs.result_url
+        jobs.result_url,
+        accounts.user_name
       FROM jobs
-      WHERE jobs.job_id = ${id};
+      JOIN accounts ON accounts.user_id = jobs.creator_id
+      WHERE jobs.job_id = ${id}
     `;
 
     const job = data.rows.map((job) => ({
@@ -510,10 +512,32 @@ export async function fetchJobsNotifications() {
     JOIN projects ON jobs.project_id = projects.project_id
     JOIN jobsnotifications ON jobs.job_id = jobsnotifications.job_id
     WHERE jobsnotifications.user_id_to = ${currentUserId}
-    ORDER BY jobsnotifications.created_at ASC
+    ORDER BY jobsnotifications.created_at DESC
     `;
 
     return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch jobs.');
+  }
+}
+
+export async function areJobsNotisRead() {
+  noStore();
+  const session: Session | null = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+
+  try {
+    const queryResult = await sql`
+      SELECT is_read FROM jobsnotifications 
+      WHERE user_id_to = ${currentUserId}
+    `;
+    const isReadValues = queryResult.rows.map(row => row.is_read);
+
+    const allRead = isReadValues.every(isRead => isRead);
+
+    return allRead;
+
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch jobs.');

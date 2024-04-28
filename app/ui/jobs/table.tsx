@@ -3,7 +3,6 @@ import { formatDateToLocalNoHour } from "@/app/lib/utils";
 import { fetchSearchedProjects } from "@/app/lib/data";
 import MembersProfilesList from "../projects/member-list";
 import JobsTable from "./list-of-users-jobs";
-import Image from "next/image";
 
 export default async function ProjectsTable({
   query,
@@ -13,23 +12,6 @@ export default async function ProjectsTable({
   currentPage: number;
 }) {
   const projects = await fetchSearchedProjects(query, currentPage);
-
-  if (projects.length === 0) {
-    return (
-      <div className="flex flex-col mt-6 items-center gap-5">
-        <Image
-          src="/no-results.png"
-          alt="logo"
-          width={200}
-          height={50}
-          priority
-        />
-        <p className="text-3xl font-bold text-gray-600 mb-4">
-          KHÔNG TÌM THẤY DỰ ÁN
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="mt-6 flow-root">
@@ -51,7 +33,7 @@ export default async function ProjectsTable({
                 </div>
               </div>
               <div className="flex flex-row pl-6 pr-3 items-end justify-between">
-                <div className="flex flex-col w-full">
+                <div className="flex flex-col w-full gap-1">
                   <div>
                     {"Ngày bắt đầu: "}
                     <span className="italic pl-1">
@@ -65,7 +47,7 @@ export default async function ProjectsTable({
                     </span>
                   </div>
                 </div>
-                <div className="flex flex-col w-full">
+                <div className="flex flex-col w-full gap-1">
                   <div>
                     {"Phân loại: "}
                     <span className="font-bold">{project.category}</span>

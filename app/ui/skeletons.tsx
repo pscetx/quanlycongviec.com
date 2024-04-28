@@ -161,3 +161,48 @@ export function MyJobsSkeleton() {
     </main>
   );
 }
+
+export function JobsNotificationsSkeleton() {
+  return (
+    <div className="inline-block min-w-full align-middle">
+      <div className="min-w-full">
+        <div className="w-full rounded-lg bg-neutral-100 m-2 p-4 border-2 border-gray-300 m-3 hover:bg-neutral-50 transition duration-300 ease-in-out last-of-type:mb-0 [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+          <div className="flex flex-row justify-between">
+            <div className="flex flex-row">
+              <div className="w-10 h-10 rounded-lg mr-3 bg-neutral-200" />
+              <div>
+                <div className="ml-3 h-4 w-96 rounded-md bg-neutral-300"></div>
+                <div className="mt-2 ml-3 h-3 w-40 rounded-md bg-neutral-300"></div>
+              </div>
+            </div>
+            <div className="h-10 w-16 rounded-md bg-neutral-200"></div>
+          </div>
+        </div>
+        <div className="w-full rounded-lg bg-neutral-100 m-2 p-4 border-2 border-gray-300 m-3 hover:bg-neutral-50 transition duration-300 ease-in-out last-of-type:mb-0 [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+          <div className="flex flex-row justify-between">
+            <div className="flex flex-row">
+              <div className="w-10 h-10 rounded-lg mr-3 bg-neutral-200" />
+              <div>
+                <div className="ml-3 h-4 w-96 rounded-md bg-neutral-300"></div>
+                <div className="mt-2 ml-3 h-3 w-40 rounded-md bg-neutral-300"></div>
+              </div>
+            </div>
+            <div className="h-10 w-16 rounded-md bg-neutral-200"></div>
+          </div>
+        </div>
+        <div className="w-full rounded-lg bg-neutral-100 m-2 p-4 border-2 border-gray-300 m-3 hover:bg-neutral-50 transition duration-300 ease-in-out last-of-type:mb-0 [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+          <div className="flex flex-row justify-between">
+            <div className="flex flex-row">
+              <div className="w-10 h-10 rounded-lg mr-3 bg-neutral-200" />
+              <div>
+                <div className="ml-3 h-4 w-96 rounded-md bg-neutral-300"></div>
+                <div className="mt-2 ml-3 h-3 w-40 rounded-md bg-neutral-300"></div>
+              </div>
+            </div>
+            <div className="h-10 w-16 rounded-md bg-neutral-200"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -24,7 +24,7 @@ export function UpdateProject({ id }: { id: string }) {
       href={`/dashboard/${id}/edit`}
       className="rounded-md border-2 border-neutral-300 px-2 py-1 font-bold hover:bg-yellow-500 hover:border-yellow-500 hover:text-white transition duration-100 ease-in-out cursor-pointer"
     >
-      <div className="flex flex-row justify-center gap-2 w-20">
+      <div className="flex flex-row justify-center gap-2 w-24">
         <PencilIcon className="w-4" />
         <span>Chỉnh sửa</span>
       </div>
