@@ -134,19 +134,19 @@ export async function deleteProject(id: string) {
 
   try {
     for (const jobId of jobIds) {
+      await sql`DELETE FROM jobsnotifications WHERE job_id = ${jobId}`;
       await sql`DELETE FROM jobsmembers WHERE job_id = ${jobId}`;
       await sql`DELETE FROM jobs WHERE job_id = ${jobId}`;
-      await sql`DELETE FROM jobsnotifications WHERE job_id = ${id}`;
     }
     await sql`DELETE FROM projectsadmins WHERE project_id = ${id}`;
     await sql`DELETE FROM projectsmembers WHERE project_id = ${id}`;
     await sql`DELETE FROM projects WHERE project_id = ${id}`;
+
+    revalidatePath('/dashboard');
+    redirect('/dashboard');
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Project.' };
   }
-
-  revalidatePath('/dashboard');
-  redirect('/dashboard');
 }
 
 const JobFormSchema = z.object({
@@ -282,11 +282,12 @@ export async function updateJob(id: string, formData: FormData) {
 
 export async function deleteJob(id: string, project_id: string) {
   try {
+    await sql`DELETE FROM jobsnotifications WHERE job_id = ${id}`;
     await sql`DELETE FROM jobsmembers WHERE job_id = ${id}`;
     await sql`DELETE FROM jobs WHERE job_id = ${id}`;
-    await sql`DELETE FROM jobsnotifications WHERE job_id = ${id}`;
+    
     revalidatePath(`/dashboard/${project_id}/edit`);
-    return { message: 'Deleted Job.' };
+    redirect(`/dashboard/${project_id}/edit`);
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Job.' };
   }
