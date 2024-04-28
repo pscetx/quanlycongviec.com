@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { addNoti } from "@/app/lib/actions";
+import { addJobNotification } from "@/app/lib/actions";
 
 export default function StatusCheck({
   status,
@@ -15,6 +15,7 @@ export default function StatusCheck({
   id: string;
 }) {
   const [timeLeft, setTimeLeft] = useState("");
+  const [elapsedTime, setElapsedTime] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -33,13 +34,29 @@ export default function StatusCheck({
         setTimeLeft(
           `QUÁ HẠN HOÀN THÀNH SAU ${days} NGÀY ${hours} GIỜ ${minutes} PHÚT ${seconds} GIÂY.`
         );
+        clearInterval(interval);
 
         if (diff <= 48 * 60 * 60 * 1000) {
-          // addNoti(id, "1");
+          addJobNotification(id, "1");
         }
       } else {
-        setTimeLeft("ĐÃ QUÁ HẠN HOÀN THÀNH.");
+        const elapsed = now.getTime() - end.getTime();
+        const elapsedDays = Math.floor(elapsed / (1000 * 60 * 60 * 24));
+        const elapsedHours = Math.floor(
+          (elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const elapsedMinutes = Math.floor(
+          (elapsed % (1000 * 60 * 60)) / (1000 * 60)
+        );
+        const elapsedSeconds = Math.floor((elapsed % (1000 * 60)) / 1000);
+
+        setElapsedTime(
+          `ĐÃ QUÁ HẠN HOÀN THÀNH ${elapsedDays} NGÀY ${elapsedHours} GIỜ ${elapsedMinutes} PHÚT ${elapsedSeconds} GIÂY.`
+        );
         clearInterval(interval);
+        if (status !== "Đã làm") {
+          addJobNotification(id, "2");
+        }
       }
     }, 1000);
 
@@ -62,6 +79,7 @@ export default function StatusCheck({
     return (
       <div className="pl-3 text-xs font-bold italic text-red-600">
         {timeLeft && ` ${timeLeft}`}
+        {elapsedTime && ` ${elapsedTime}`}
       </div>
     );
   }

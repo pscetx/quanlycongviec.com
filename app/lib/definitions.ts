@@ -42,21 +42,21 @@ export type MembersProfilesList = {
 export type MembersField = {
     user_id: string;
     user_name: string;
-    profile_url: string;
     email: string;
+    profile_url: string;
     job_count: string;
 };
 
 export type ProjectForm = {
     project_id: string;
     project_name: string;
+    category: string;
     start_date: string;
     end_date: string;
-    category: string;
+    description: string;
     creator_id: string;
     user_name: string;
     email: string;
-    description: string;
 };
 
 export type JobsTable = {
@@ -75,27 +75,28 @@ export type JobForm = {
     job_id: string;
     project_id: string;
     job_name: string;
-    description: string;
     status: 'Chưa làm' | 'Đang làm' | 'Đã làm';
     deadline: string;
+    description: string;
     result_url: string;
+    creator_id: string;
     user_name: string;
+    email: string;
 };
 
 export type JobPercentage = {
     project_id: string;
     project_name: string;
+    status: 'Chưa làm' | 'Đang làm' | 'Đã làm';
     total_jobs: string;
     total_specified_jobs: string;
-    status: 'Chưa làm' | 'Đang làm' | 'Đã làm';
     percent_completed: string;
 };
 
-export type Notifications = {
-    noti_id: string;
-    user_id_to: string;
-    user_id_from: string;
+export type JobsNotifications = {
+    job_id: string;
     type: string;
+    user_id_to: string;
 	is_read: boolean;
     created_at: string;
 };

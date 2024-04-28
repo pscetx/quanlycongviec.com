@@ -136,6 +136,7 @@ export async function deleteProject(id: string) {
     for (const jobId of jobIds) {
       await sql`DELETE FROM jobsmembers WHERE job_id = ${jobId}`;
       await sql`DELETE FROM jobs WHERE job_id = ${jobId}`;
+      await sql`DELETE FROM jobsnotifications WHERE job_id = ${id}`;
     }
     await sql`DELETE FROM projectsadmins WHERE project_id = ${id}`;
     await sql`DELETE FROM projectsmembers WHERE project_id = ${id}`;
@@ -250,6 +251,21 @@ export async function updateJob(id: string, formData: FormData) {
   });
  
   try {
+    const previousDeadlineRow = await sql`
+      SELECT deadline FROM jobs 
+      WHERE job_id = ${id}
+      FOR UPDATE
+    `;
+
+    const previousDeadline = previousDeadlineRow.rows[0].deadline;
+
+      if (previousDeadline !== deadline) {
+        await sql`
+          DELETE FROM jobsnotifications
+          WHERE job_id = ${id} AND type != '3'
+        `;
+    }
+    
     await sql`
         UPDATE jobs
         SET job_name = ${jobName}, status = ${status}, deadline = ${deadline}, result_url = ${resultUrl}, description = ${jobDescription} 
@@ -268,6 +284,7 @@ export async function deleteJob(id: string, project_id: string) {
   try {
     await sql`DELETE FROM jobsmembers WHERE job_id = ${id}`;
     await sql`DELETE FROM jobs WHERE job_id = ${id}`;
+    await sql`DELETE FROM jobsnotifications WHERE job_id = ${id}`;
     revalidatePath(`/dashboard/${project_id}/edit`);
     return { message: 'Deleted Job.' };
   } catch (error) {
@@ -512,6 +529,13 @@ export async function updateResult(id: string, formData: FormData) {
         status = 'Đang làm'
       WHERE job_id = ${id}
     `;
+    
+    await sql`
+          DELETE FROM jobsnotifications
+          WHERE type = '3'
+        `;
+    
+    addJobNotification(id, '3');
     revalidatePath(`/dashboard/jobs`);
     redirect(`/dashboard/jobs`);
   } catch (error) {
@@ -520,18 +544,37 @@ export async function updateResult(id: string, formData: FormData) {
   }
 }
 
-export async function addNoti(id: string, type: string) {
-  const session: Session | null = await getServerSession();
-  const currentUserId = await getCurrentUserId(session);
+export async function addJobNotification(id: string, type: string) {
   try {
-    await sql`
-      INSERT INTO notifications (user_id_to, type)
-        SELECT user_id, ${type}
-        FROM jobsmembers
-        WHERE job_id = ${id};
-    `;
+      const existingRow = await sql`
+        SELECT * FROM jobsnotifications 
+        WHERE job_id = ${id} AND type = ${type}
+        FOR UPDATE
+      `;
+
+    if (existingRow.rowCount === 0) {
+      if (type === '3') {
+          await sql`
+            INSERT INTO jobsnotifications (job_id, type, user_id_to)
+            SELECT ${id}, ${type}, projectsadmins.user_id
+            FROM projectsadmins
+            WHERE projectsadmins.project_id = (
+              SELECT jobs.project_id
+              FROM jobs
+              WHERE jobs.job_id = ${id}
+            )
+          `;
+      }
+      else {
+        await sql`
+          INSERT INTO jobsnotifications (job_id, type, user_id_to)
+          SELECT ${id}, ${type}, user_id
+          FROM jobsmembers
+          WHERE job_id = ${id}
+        `;}
+      }
   } catch (error) {
-    console.error('Error updating:', error);
+    console.error('Error adding:', error);
     return { message: 'Database Error: Failed to Add Notification.' };
   }
 }

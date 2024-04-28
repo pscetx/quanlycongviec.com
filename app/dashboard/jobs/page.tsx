@@ -5,7 +5,7 @@ import { lusitana } from "@/app/ui/fonts";
 import { Suspense } from "react";
 import { fetchProjectsPages } from "@/app/lib/data";
 import { Metadata } from "next";
-import DashboardSkeleton from "@/app/ui/skeletons";
+import { MyJobsSkeleton } from "@/app/ui/skeletons";
 
 export const metadata: Metadata = {
   title: "Công việc của tôi",
@@ -35,7 +35,7 @@ export default async function Page({
         <Search placeholder="Nhập tên, ngày (YYYY-MM-DD), phân loại.." />
       </div>
       {
-        <Suspense key={query + currentPage} fallback={<DashboardSkeleton />}>
+        <Suspense key={query + currentPage} fallback={<MyJobsSkeleton />}>
           <ProjectsTable query={query} currentPage={currentPage} />
         </Suspense>
       }
