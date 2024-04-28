@@ -33,9 +33,11 @@ export default async function NotificationsTable() {
     <div className="inline-block min-w-full align-middle">
       <div className="min-w-full">
         {notifications?.map((noti) => (
-          <form action={updateIsRead.bind(null, noti.job_id, noti.type)}>
+          <form
+            key={noti.job_id + "_" + noti.type}
+            action={updateIsRead.bind(null, noti.job_id, noti.type)}
+          >
             <div
-              key={noti.job_id + "_" + noti.type}
               className={`w-full rounded-lg p-4 border-2 border-gray-300 m-3 hover:bg-neutral-50 transition duration-300 ease-in-out last-of-type:mb-0 [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg ${
                 noti.is_read ? "bg-neutral-200" : "bg-neutral-100"
               }`}
