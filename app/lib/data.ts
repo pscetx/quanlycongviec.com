@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, JobsTable, JobForm, Accounts, JobPercentage } from './definitions';
+import { ProjectsTable, MembersProfilesList, MembersField, Categories, ProjectForm, JobsTable, JobForm, Accounts, JobPercentage, JobsNotifications } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 import { getServerSession, Session } from "next-auth";
 
@@ -485,5 +485,37 @@ export async function fetchUsersJobs(id: string) {
   } catch (error: any) {
     console.error('Database Error:', error);
     throw new Error(`Failed to fetch jobs: ${(error as Error).message}`);
+  }
+}
+
+export async function fetchJobsNotifications() {
+  noStore();
+  const session: Session | null = await getServerSession();
+  const currentUserId = await getCurrentUserId(session);
+
+  try {
+    const data = await sql<JobsNotifications>`
+    SELECT
+      jobs.job_id,
+      jobs.project_id,
+      jobs.job_name,
+      jobs.status,
+      jobs.deadline,
+      projects.project_name,
+      jobsnotifications.type,
+      jobsnotifications.is_read,
+      jobsnotifications.created_at,
+      jobsnotifications.user_id_to
+    FROM jobs
+    JOIN projects ON jobs.project_id = projects.project_id
+    JOIN jobsnotifications ON jobs.job_id = jobsnotifications.job_id
+    WHERE jobsnotifications.user_id_to = ${currentUserId}
+    ORDER BY jobsnotifications.created_at ASC
+    `;
+
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch jobs.');
   }
 }

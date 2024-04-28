@@ -26,7 +26,7 @@ export function UpdateProject({ id }: { id: string }) {
     >
       <div className="flex flex-row justify-center gap-2 w-20">
         <PencilIcon className="w-4" />
-        <span>Chi tiết</span>
+        <span>Chỉnh sửa</span>
       </div>
     </Link>
   );

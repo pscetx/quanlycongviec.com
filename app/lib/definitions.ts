@@ -95,8 +95,13 @@ export type JobPercentage = {
 
 export type JobsNotifications = {
     job_id: string;
+    job_name: string;
+    project_id: string;
+    project_name: string;
+    status: string;
+    deadline: string;
     type: string;
-    user_id_to: string;
 	is_read: boolean;
     created_at: string;
+    user_id_to: string;
 };
