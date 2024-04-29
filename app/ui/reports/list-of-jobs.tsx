@@ -40,15 +40,11 @@ export default async function JobsTable({ id }: { id: string }) {
       <table className="w-full border-collapse">
         <thead>
           <tr>
-            <th className="border border-black w-10 py-2">STT</th>
-            <th className="border border-black w-36 px-2 py-2">
-              Tên công việc
-            </th>
-            <th className="border border-black w-2 py-2">Trạng thái</th>
-            <th className="border border-black w-32 px-2 py-2">
-              Hạn hoàn thành
-            </th>
-            <th className="border border-black w-44 py-2">Kết quả</th>
+            <th className="border border-black py-2">STT</th>
+            <th className="border border-black py-2">Tên công việc</th>
+            <th className="border border-black py-2">Trạng thái</th>
+            <th className="border border-black py-2">Hạn hoàn thành</th>
+            <th className="border border-black py-2">Kết quả</th>
             <th className="border border-black py-2">Nhận xét</th>
           </tr>
         </thead>
@@ -58,17 +54,19 @@ export default async function JobsTable({ id }: { id: string }) {
               <td className="border border-black py-2 text-center">
                 {index + 1}
               </td>
-              <td className="border border-black px-2 py-2">{job.job_name}</td>
-              <td className="border border-black px-2 py-2 font-bold uppercase text-center">
+              <td className="border border-black px-2 py-2 text-center">
+                {job.job_name}
+              </td>
+              <td className="border border-black py-2 font-bold uppercase text-center">
                 {job.status}
               </td>
-              <td className="border border-black px-2 py-2">
+              <td className="border border-black py-2 text-center">
                 {formatDateToLocal(job.deadline)}
               </td>
-              <td className="border border-black px-2 py-2">
-                <a href={job.result_url}>{job.result_url}</a>
+              <td className="border border-black px-2 py-2 text-center text-wrap">
+                {job.result_url}
               </td>
-              <td className="border border-black px-2 py-2">
+              <td className="border border-black px-2 w-80 py-2">
                 <textarea rows={1} className="w-full" />
               </td>
             </tr>

@@ -3,6 +3,7 @@ import { formatDateToLocalNoHour } from "@/app/lib/utils";
 import { fetchSearchedProjects } from "@/app/lib/data";
 import MembersProfilesList from "../projects/member-list";
 import JobsTable from "./list-of-users-jobs";
+import Link from "next/link";
 
 export default async function ProjectsTable({
   query,
@@ -24,11 +25,13 @@ export default async function ProjectsTable({
             >
               <div className="whitespace-nowrap p-3 pt-0 pl-6">
                 <div className="flex items-center">
-                  <p
-                    className={`${lusitana.className} text-xl font-extrabold text-emerald-800`}
-                  >
-                    {project.project_name}
-                  </p>
+                  <Link href={`/dashboard/${project.project_id}/edit`}>
+                    <p
+                      className={`${lusitana.className} text-xl font-extrabold text-emerald-800`}
+                    >
+                      {project.project_name}
+                    </p>
+                  </Link>
                   <MembersProfilesList id={project.project_id} />
                 </div>
               </div>

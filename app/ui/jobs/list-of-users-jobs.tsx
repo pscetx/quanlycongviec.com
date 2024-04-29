@@ -6,6 +6,7 @@ import JobStatus from "./status";
 import { updateResult } from "@/app/lib/actions";
 import { Button } from "../button";
 import StatusCheck from "./status-check";
+import Link from "next/link";
 
 export default async function JobsTable({ id }: { id: string }) {
   const jobs = await fetchUsersJobs(id);
@@ -33,11 +34,13 @@ export default async function JobsTable({ id }: { id: string }) {
               </div>
               <div className="py-3 mb-2 border-t border-l hover:bg-emerald-100 transition duration-300 ease-in-out rounded-l-lg rounded-r-none w-11/12">
                 <div className="flex items-center whitespace-nowrap p-3 pt-0">
-                  <p
-                    className={`${lusitana.className} text-lg font-extrabold text-emerald-800`}
-                  >
-                    {job.job_name}
-                  </p>
+                  <Link href={`/dashboard/jobs/${job.job_id}`}>
+                    <p
+                      className={`${lusitana.className} text-lg font-extrabold text-emerald-800`}
+                    >
+                      {job.job_name}
+                    </p>
+                  </Link>
                   <div className="ml-3">
                     <JobStatus status={job.status} />
                   </div>

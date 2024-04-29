@@ -33,7 +33,6 @@ export default function Form({
   };
 
   const handleAddMember = () => {
-    // Assume members have unique email addresses
     const member = members.find((member) => member.email === inputEmail);
     if (member && !selectedMembers.includes(member.user_id)) {
       setSelectedMembers((prevSelectedMembers) => [
@@ -64,7 +63,6 @@ export default function Form({
 
   return (
     <div className="rounded-md bg-gray-50 p-4 md:p-6">
-      {/* Input for manually adding email */}
       <div className="mb-4">
         <label htmlFor="inputEmail" className="mb-2 block text-sm font-medium">
           Nhập email

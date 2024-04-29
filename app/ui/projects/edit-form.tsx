@@ -6,6 +6,8 @@ import {
   ClockIcon,
   CalendarIcon,
   BookOpenIcon,
+  AtSymbolIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
@@ -66,7 +68,7 @@ export default function EditProjectForm({
                   className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                   required
                 />
-                <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
               <Button
                 type="submit"
@@ -104,7 +106,7 @@ export default function EditProjectForm({
                   ))}
                 </select>
 
-                <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+                <TrashIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
               </div>
               <Button
                 type="submit"
@@ -162,7 +164,7 @@ export default function EditProjectForm({
                   className="peer block w-full transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                   required
                 />
-                <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
               <Button
                 type="submit"
@@ -197,7 +199,7 @@ export default function EditProjectForm({
                   ))}
                 </select>
 
-                <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+                <TrashIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
               </div>
               <Button
                 type="submit"

@@ -11,6 +11,19 @@ import { Button } from "../button";
 
 export default async function NotificationsTable() {
   const notifications = await fetchJobsNotifications();
+  const formatDateToGMT7 = (dateString: string) => {
+    const date = new Date(dateString);
+    const gmtPlus7Offset = 7 * 60 * 60 * 1000;
+    const gmt7Date = new Date(date.getTime() + gmtPlus7Offset);
+    const options = {
+      timeZone: "Asia/Bangkok",
+      year: "numeric" as const,
+      month: "long" as const,
+      day: "numeric" as const,
+      hour12: false,
+    };
+    return gmt7Date.toLocaleString("vi-VN", options);
+  };
 
   if (notifications.length === 0) {
     return (
@@ -59,7 +72,7 @@ export default async function NotificationsTable() {
                         . Hạn hoàn thành: {formatDateToLocal(noti.deadline)}.
                       </div>
                       <div className="text-gray-500 text-sm italic">
-                        {formatDateToLocal(noti.created_at)}
+                        {formatDateToGMT7(noti.created_at)}
                       </div>
                     </div>
                   </div>
@@ -88,7 +101,7 @@ export default async function NotificationsTable() {
                         . Hạn hoàn thành: {formatDateToLocal(noti.deadline)}.
                       </div>
                       <div className="text-gray-500 text-sm italic">
-                        {formatDateToLocal(noti.created_at)}
+                        {formatDateToGMT7(noti.created_at)}
                       </div>
                     </div>
                   </div>
@@ -117,7 +130,7 @@ export default async function NotificationsTable() {
                         . Vui lòng kiểm tra và cập nhật trạng thái công việc.
                       </div>
                       <div className="text-gray-500 text-sm italic">
-                        {formatDateToLocal(noti.created_at)}
+                        {formatDateToGMT7(noti.created_at)}
                       </div>
                     </div>
                   </div>

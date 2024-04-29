@@ -1,11 +1,11 @@
 export const formatDateToLocal = (
   dateStr: string,
-  locale: string = 'en-US',
+  locale: string = 'vi-VN',
 ) => {
   const date = new Date(dateStr);
   const options: Intl.DateTimeFormatOptions = {
     day: 'numeric',
-    month: 'short',
+    month: 'numeric',
     year: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
@@ -16,12 +16,12 @@ export const formatDateToLocal = (
 
 export const formatDateToLocalNoHour = (
   dateStr: string,
-  locale: string = 'en-US',
+  locale: string = 'vi-VN',
 ) => {
   const date = new Date(dateStr);
   const options: Intl.DateTimeFormatOptions = {
     day: 'numeric',
-    month: 'short',
+    month: 'numeric',
     year: 'numeric',
   };
   const formatter = new Intl.DateTimeFormat(locale, options);
