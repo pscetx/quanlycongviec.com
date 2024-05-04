@@ -9,6 +9,7 @@ export const formatDateToLocal = (
     day: "numeric" as const,
     hour: "numeric" as const,
     minute: "numeric" as const,
+    hour12: true
   };
   const formatter = new Intl.DateTimeFormat(locale, options);
   return formatter.format(date);
