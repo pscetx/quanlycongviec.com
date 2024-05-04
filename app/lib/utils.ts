@@ -5,7 +5,7 @@ export const formatDateToLocal = (
   const date = new Date(dateStr);
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric" as const,
-    month: "long" as const,
+    month: "numeric" as const,
     day: "numeric" as const,
     hour: "numeric" as const,
     minute: "numeric" as const,
