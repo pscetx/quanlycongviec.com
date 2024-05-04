@@ -3,6 +3,7 @@ import { formatDateToLocalNoHour } from "@/app/lib/utils";
 import { fetchSearchedProjects } from "@/app/lib/data";
 import MembersProfilesList from "../projects/member-list";
 import { CreateReport } from "./buttons";
+import Image from "next/image";
 
 export default async function ProjectsTable({
   query,
@@ -15,13 +16,17 @@ export default async function ProjectsTable({
 
   if (projects.length === 0) {
     return (
-      <div className="mt-6 text-center">
+      <div className="flex flex-col mt-6 items-center gap-5">
+        <Image
+          src="/no-results.png"
+          alt="logo"
+          width={200}
+          height={50}
+          priority
+        />
         <p className="text-3xl font-bold text-gray-600 mb-4">
           KHÔNG TÌM THẤY DỰ ÁN
         </p>
-        <div className="bg-gradient-to-r from-emerald-400 to-green-500 py-2 px-4 rounded-md inline-block text-white text-lg font-bold shadow-md hover:shadow-lg transition duration-300 ease-in-out cursor-pointer">
-          <a href="/dashboard/create">Chần chừ gì nữa tạo dự án mới thôi!</a>
-        </div>
       </div>
     );
   }

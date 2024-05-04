@@ -4,6 +4,7 @@ import { fetchSearchedProjects } from "@/app/lib/data";
 import MembersProfilesList from "../projects/member-list";
 import JobsTable from "./list-of-users-jobs";
 import Link from "next/link";
+import Image from "next/image";
 
 export default async function ProjectsTable({
   query,
@@ -13,6 +14,23 @@ export default async function ProjectsTable({
   currentPage: number;
 }) {
   const projects = await fetchSearchedProjects(query, currentPage);
+
+  if (projects.length === 0) {
+    return (
+      <div className="flex flex-col mt-6 items-center gap-5">
+        <Image
+          src="/no-results.png"
+          alt="logo"
+          width={200}
+          height={50}
+          priority
+        />
+        <p className="text-3xl font-bold text-gray-600 mb-4">
+          KHÔNG TÌM THẤY DỰ ÁN
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-6 flow-root">
