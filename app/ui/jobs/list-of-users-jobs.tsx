@@ -77,23 +77,25 @@ export default async function JobsTable({ id }: { id: string }) {
                     {job.result_url}
                   </a>
                 </div>
-                <form
-                  className="flex flex-row mt-2 mx-3 gap-3"
-                  action={updateResult.bind(null, job.job_id)}
-                >
-                  <input
-                    name="result"
-                    placeholder="Cập nhật đường dẫn kết quả mới"
-                    className="peer block w-full pl-2 transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 text-sm outline-2 placeholder:text-gray-500"
-                    required
-                  />
-                  <Button
-                    type="submit"
-                    className="justify-center w-16 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition duration-300 ease-in-out"
+                {job.status !== "Đã làm" && (
+                  <form
+                    className="flex flex-row mt-2 mx-3 gap-3"
+                    action={updateResult.bind(null, job.job_id)}
                   >
-                    Lưu
-                  </Button>
-                </form>
+                    <input
+                      name="result"
+                      placeholder="Cập nhật đường dẫn kết quả mới"
+                      className="peer block w-full pl-2 transition duration-200 ease-in-out rounded-md border-2 border-gray-200 focus:outline-none focus:border-emerald-500 text-sm outline-2 placeholder:text-gray-500"
+                      required
+                    />
+                    <Button
+                      type="submit"
+                      className="justify-center w-16 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition duration-300 ease-in-out"
+                    >
+                      Lưu
+                    </Button>
+                  </form>
+                )}
               </div>
             </div>
           ))}
