@@ -1,6 +1,6 @@
 export const formatDateToLocal = (
   dateStr: string,
-  locale: string = 'vi-VN',
+  locale: string = 'en-US',
 ) => {
   const date = new Date(dateStr);
   const options: Intl.DateTimeFormatOptions = {
