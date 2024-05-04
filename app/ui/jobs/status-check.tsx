@@ -35,7 +35,7 @@ export default function StatusCheck({
         );
         clearInterval(interval);
 
-        if (diff <= 48 * 60 * 60 * 1000) {
+        if (diff <= 48 * 60 * 60 * 1000 && status !== "Đã làm") {
           addJobNotification(id, "1");
         }
       } else {
