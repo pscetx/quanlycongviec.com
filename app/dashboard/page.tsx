@@ -7,6 +7,7 @@ import { fetchProjectsPages } from "@/app/lib/data";
 import { Metadata } from "next";
 import { CreateProject } from "../ui/projects/buttons";
 import DashboardSkeleton from "@/app/ui/skeletons";
+import { NotificationsButton } from "../ui/notifications/noti-button";
 
 export const metadata: Metadata = {
   title: "Danh sách dự án",
@@ -27,10 +28,13 @@ export default async function Page({
 
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-emerald-700 text-2xl`}>
-          Danh sách dự án
-        </h1>
+      <div className="flex flex-row justify-between">
+        <div className="flex w-full items-center justify-between">
+          <h1 className={`${lusitana.className} text-emerald-700 text-2xl`}>
+            Danh sách dự án
+          </h1>
+        </div>
+        <NotificationsButton />
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Nhập tên, ngày (YYYY-MM-DD), phân loại.." />

@@ -3,6 +3,7 @@ import Breadcrumbs from "@/app/ui/breadcrumbs";
 import { fetchProjectsMembers, fetchProjectById } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { NotificationsButton } from "@/app/ui/notifications/noti-button";
 
 export const metadata: Metadata = {
   title: "Chi tiết dự án",
@@ -25,16 +26,19 @@ export default async function Page({
 
   return (
     <main>
-      <Breadcrumbs
-        breadcrumbs={[
-          { label: "Báo cáo", href: "/dashboard/reports" },
-          {
-            label: project_name,
-            href: `/dashboard/reports/${project_id}`,
-            active: true,
-          },
-        ]}
-      />
+      <div className="flex flex-row justify-between">
+        <Breadcrumbs
+          breadcrumbs={[
+            { label: "Báo cáo", href: "/dashboard/reports" },
+            {
+              label: project_name,
+              href: `/dashboard/reports/${project_id}`,
+              active: true,
+            },
+          ]}
+        />
+        <NotificationsButton />
+      </div>
       <Form project={project} members={members} />
     </main>
   );

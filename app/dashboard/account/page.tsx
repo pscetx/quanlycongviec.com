@@ -12,6 +12,7 @@ import EditPasswordForm from "@/app/ui/account/pass-change";
 import EditCategoriesForm from "@/app/ui/account/categories-edit";
 import { UploadPic } from "@/app/ui/account/profile-edit";
 import { revalidatePath } from "next/cache";
+import { NotificationsButton } from "@/app/ui/notifications/noti-button";
 
 export const metadata: Metadata = {
   title: "Tài khoản",
@@ -28,9 +29,12 @@ export default async function Page() {
   const categories = await fetchCategories();
   return (
     <main>
-      <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Tài khoản
-      </h1>
+      <div className="flex flex-row justify-between">
+        <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
+          Tài khoản
+        </h1>
+        <NotificationsButton />
+      </div>
       <UploadPic />
       <EditCategoriesForm acc={acc} categories={categories} />
       <EditPasswordForm acc={acc} />

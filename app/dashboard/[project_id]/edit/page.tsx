@@ -9,6 +9,7 @@ import {
 } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { NotificationsButton } from "@/app/ui/notifications/noti-button";
 
 export const metadata: Metadata = {
   title: "Chi tiết dự án",
@@ -34,16 +35,19 @@ export default async function Page({
 
   return (
     <main>
-      <Breadcrumbs
-        breadcrumbs={[
-          { label: "Danh sách dự án", href: "/dashboard/" },
-          {
-            label: project_name,
-            href: `/dashboard/${project_id}/edit`,
-            active: true,
-          },
-        ]}
-      />
+      <div className="flex flex-row justify-between">
+        <Breadcrumbs
+          breadcrumbs={[
+            { label: "Danh sách dự án", href: "/dashboard/" },
+            {
+              label: project_name,
+              href: `/dashboard/${project_id}/edit`,
+              active: true,
+            },
+          ]}
+        />
+        <NotificationsButton />
+      </div>
       <Form
         project={project}
         members={members}

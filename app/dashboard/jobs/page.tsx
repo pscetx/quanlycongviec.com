@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { fetchProjectsPages } from "@/app/lib/data";
 import { Metadata } from "next";
 import { MyJobsSkeleton } from "@/app/ui/skeletons";
+import { NotificationsButton } from "@/app/ui/notifications/noti-button";
 
 export const metadata: Metadata = {
   title: "Công việc của tôi",
@@ -26,10 +27,13 @@ export default async function Page({
 
   return (
     <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-emerald-700 text-2xl`}>
-          Công việc của tôi
-        </h1>
+      <div className="flex flex-row justify-between">
+        <div className="flex w-full items-center justify-between">
+          <h1 className={`${lusitana.className} text-emerald-700 text-2xl`}>
+            Công việc của tôi
+          </h1>
+        </div>
+        <NotificationsButton />
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Nhập tên, ngày (YYYY-MM-DD), phân loại.." />

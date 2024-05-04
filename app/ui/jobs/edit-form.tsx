@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
 import { updateJob, addJobsMember, deleteJobsMember } from "@/app/lib/actions";
+import StatusCheck from "./status-check";
 
 export default function EditProjectForm({
   job,
@@ -30,6 +31,14 @@ export default function EditProjectForm({
 
   return (
     <main>
+      <div className="hidden">
+        <StatusCheck
+          status={job.status}
+          result_url={job.result_url}
+          deadline={job.deadline}
+          id={job.job_id}
+        />
+      </div>
       <div className="rounded-md bg-gray-50 p-4 mb-6 md:p-6">
         <form action={addMem}>
           <input

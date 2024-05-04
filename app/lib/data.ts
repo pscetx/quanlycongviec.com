@@ -522,7 +522,7 @@ export async function fetchJobsNotifications() {
   }
 }
 
-export async function areJobsNotisRead() {
+export async function areJobsNotificationsRead() {
   noStore();
   const session: Session | null = await getServerSession();
   const currentUserId = await getCurrentUserId(session);

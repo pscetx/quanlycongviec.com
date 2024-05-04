@@ -4,7 +4,6 @@ import Image from "next/image";
 import logo from "@/public/quanlycongviec.com-white.svg";
 import { getServerSession } from "next-auth";
 import UserCard from "./user-card";
-import { NotiButton } from "../notifications/noti-button";
 
 export default async function SideNav() {
   const session = await getServerSession();
@@ -13,9 +12,6 @@ export default async function SideNav() {
       <div className="mb-1 flex flex-col h-20 bg-neutral-800 rounded-md justify-between p-2 md:h-40">
         <div className="flex-grow items-center">
           <Image src={logo} alt="logo" width={400} height={50} priority />
-        </div>
-        <div className="flex justify-end">
-          <NotiButton />
         </div>
       </div>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-1">

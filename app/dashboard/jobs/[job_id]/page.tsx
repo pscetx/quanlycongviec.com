@@ -7,6 +7,7 @@ import {
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import JobDetails from "@/app/ui/jobs/job-details";
+import { NotificationsButton } from "@/app/ui/notifications/noti-button";
 
 export const metadata: Metadata = {
   title: "Chi tiết công việc",
@@ -26,16 +27,19 @@ export default async function Page({ params }: { params: { job_id: string } }) {
 
   return (
     <main>
-      <Breadcrumbs
-        breadcrumbs={[
-          { label: "Công việc của tôi", href: "/dashboard/jobs" },
-          {
-            label: job_name,
-            href: `/dashboard/jobs/${job_id}/edit`,
-            active: true,
-          },
-        ]}
-      />
+      <div className="flex flex-row justify-between">
+        <Breadcrumbs
+          breadcrumbs={[
+            { label: "Công việc của tôi", href: "/dashboard/jobs" },
+            {
+              label: job_name,
+              href: `/dashboard/jobs/${job_id}/edit`,
+              active: true,
+            },
+          ]}
+        />
+        <NotificationsButton />
+      </div>
       <JobDetails job={job} members={members} project={project} />
     </main>
   );
