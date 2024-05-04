@@ -22,7 +22,7 @@ export default async function NotificationsTable() {
       day: "numeric" as const,
       hour: "numeric" as const,
       minute: "numeric" as const,
-      hour12: false,
+      hour12: true,
     };
     return gmt7Date.toLocaleString("vi-VN", options);
   };
